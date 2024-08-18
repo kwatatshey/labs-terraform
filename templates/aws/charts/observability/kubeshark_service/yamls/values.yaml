@@ -1,0 +1,15 @@
+fullnameOverride: ${release_name}
+
+tap:
+  ingress:
+    enabled: true
+    className: "alb"
+    host: ${release_name}.${domain}
+    tls: []
+    annotations:
+      alb.ingress.kubernetes.io/certificate-arn: ${certificate_arn}
+      alb.ingress.kubernetes.io/scheme: ${scheme}
+      alb.ingress.kubernetes.io/target-type: "ip"
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+      alb.ingress.kubernetes.io/ssl-redirect: "443"
+      alb.ingress.kubernetes.io/group.name: "default-group"

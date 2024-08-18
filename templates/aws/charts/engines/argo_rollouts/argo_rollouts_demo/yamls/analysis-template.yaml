@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: analysis-simulator-${name_postfix}-demo
+  namespace: ${namespace}
+spec:
+  metrics:
+  - name: analysis-simulator
+    failureLimit: 0 # Caused the rollout to cancel back
+    provider:
+      job: 
+        spec:
+          backoffLimit: 0
+          template:
+            spec:
+              containers:
+              - name: simulator
+                image: alpine:3.8
+                env:
+                - name: EXIT_CODE
+                  value: "${exit_code}"
+                command: ["/bin/sh"]
+                args: ["-c", "exit $(EXIT_CODE)"]
+              restartPolicy: Never

@@ -1,0 +1,56 @@
+fullnameOverride: ${release_name}
+
+query:
+  ingress:
+    enabled: true
+    ingressClassName: "alb"
+    hosts:
+      - ${release_name}.${domain}
+    annotations:
+      alb.ingress.kubernetes.io/certificate-arn: ${certificate_arn}
+      alb.ingress.kubernetes.io/scheme: ${scheme}
+      alb.ingress.kubernetes.io/target-type: "ip"
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+      alb.ingress.kubernetes.io/ssl-redirect: "443"
+      alb.ingress.kubernetes.io/group.name: "default-group"
+    path: /
+    pathType: Prefix
+    tls: []
+
+collector:
+  service:
+    otlp:
+      grpc:
+        name: otlp-grpc
+        port: 4317
+      http:
+        name: otlp-http
+        port: 4318
+
+### Demo application for testing Jaeger connection using OTLP exporter
+hotrod:
+  enabled: ${demo_enabled}
+  ingress:
+    enabled: true
+    ingressClassName: "alb"
+    hosts:
+      - hotrod-${release_name}.${domain}
+    annotations:
+      alb.ingress.kubernetes.io/certificate-arn: ${certificate_arn}
+      alb.ingress.kubernetes.io/scheme: ${scheme}
+      alb.ingress.kubernetes.io/target-type: "ip"
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+      alb.ingress.kubernetes.io/ssl-redirect: "443"
+      alb.ingress.kubernetes.io/group.name: "default-group"
+    path: /
+    pathType: Prefix
+    tls: []
+  tracing:
+    host: jaeger
+    port: 6831
+  extraArgs:
+    - --otel-exporter=otlp
+    - --jaeger-ui=http://jaeger-query
+  extraEnv:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: http://jaeger-collector:4318

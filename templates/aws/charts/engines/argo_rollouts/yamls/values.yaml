@@ -1,0 +1,28 @@
+nameOverride: ${release_name}
+fullnameOverride: ${release_name}
+apiVersionOverrides:
+  ingress: "networking.k8s.io/v1"
+keepCRDs: false
+dashboard:
+%{ if dashboard_enabled ~}
+  enabled: true
+%{ else ~}
+  enabled: false
+%{ endif ~}
+  logging:
+    level: info
+    kloglevel: "0"
+  ingress:
+    enabled: true
+    ingressClassName: "alb"
+    annotations:
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+      alb.ingress.kubernetes.io/ssl-redirect: "443"
+      alb.ingress.kubernetes.io/group.name: "default-group"
+      alb.ingress.kubernetes.io/scheme: "internet-facing"
+      alb.ingress.kubernetes.io/target-type: "ip"
+    hosts:
+       - ${release_name}.${domain}
+    paths:
+      - /
+    pathType: Prefix

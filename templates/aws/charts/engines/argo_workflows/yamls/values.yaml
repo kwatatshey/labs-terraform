@@ -1,0 +1,33 @@
+server:
+  ingress:
+    enabled: true
+    ingressClassName: alb
+    annotations:
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+      alb.ingress.kubernetes.io/ssl-redirect: "443"
+      alb.ingress.kubernetes.io/group.name: "argo"
+      alb.ingress.kubernetes.io/scheme: "internet-facing"
+      alb.ingress.kubernetes.io/target-type: "ip"
+    hosts:
+      - ${hostname}
+    path: /
+    pathType: Prefix
+%{ if sso_enabled ~}
+  authMode: sso
+  sso:
+    enabled: true
+    issuer: https://${argocd_hostname}/api/dex
+    sessionExpiry: 12h
+    clientId:
+      name: ${argocd_github_sso_secret}
+      key: clientId
+    clientSecret:
+      name: ${argocd_github_sso_secret}
+      key: clientSecret
+    redirectUrl: https://${hostname}/oauth2/callback
+    rbac:
+      enabled: false
+%{ else ~}
+  extraArgs:
+    - --auth-mode=server
+%{ endif ~}

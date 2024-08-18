@@ -1,0 +1,19 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: aws-sqs-queue-scaledobject
+  namespace: ${namespace}
+spec:
+  pollingInterval: ${polling_interval}
+  cooldownPeriod: ${cooldown_period}
+  minReplicaCount: ${min_replica_count}
+  maxReplicaCount: ${max_replica_count}
+  scaleTargetRef:
+    name: ${app_deployment_name}
+  triggers:
+  - type: aws-sqs-queue
+    metadata:
+      queueURL: ${sqs_queue_url}
+      queueLength: "${sqs_queue_length}"
+      awsRegion: ${region}
+      identityOwner: operator

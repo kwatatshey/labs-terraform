@@ -1,0 +1,66 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: rollouts-demo
+  namespace: ${namespace}
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: ${app_selector_label}
+  template:
+    metadata:
+      labels:
+        app: ${app_selector_label}
+    spec:
+      containers:
+      - name: rollouts-demo
+        image: argoproj/rollouts-demo:${image_tag}
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        resources:
+          requests:
+            memory: 32Mi
+            cpu: 5m
+  strategy:
+    canary:
+      canaryService: ${canary_service}
+      stableService: ${stable_service}
+      trafficRouting:
+        alb:
+          ingress: ${ingress}
+          rootService: ${root_service}
+          servicePort: 80
+      steps:
+
+      - setWeight: 20
+      - pause: {duration: 10s}
+      - analysis:
+          templates:
+          - templateName: ${first_analysis}
+
+      - setWeight: 40
+      - pause: {duration: 10s}
+      - analysis:
+          templates:
+          - templateName: ${second_analysis}
+
+      - setWeight: 60
+      - pause: {duration: 10s}
+      - analysis:
+          templates:
+          - templateName: ${third_analysis}
+
+      - setWeight: 80
+      - pause: {duration: 10s}
+      - analysis:
+          templates:
+          - templateName: ${forth_analysis}
+
+      - setWeight: 100
+      - pause: {duration: 10s}
+      - analysis:
+          templates:
+          - templateName: ${fifth_analysis}    

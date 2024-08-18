@@ -1,0 +1,94 @@
+fullnameOverride: ${release_name}
+configs:
+  params:
+    "server.insecure": true
+  cm:
+    create: true
+    url: "https://${hostname}"
+%{ if sso_enabled }
+%{ if sso_provider == "github" }
+    dex.config: |
+      connectors:
+        - type: github
+          id: github
+          name: GitHub
+          config:
+            clientID: ${sso_client_id}
+            clientSecret: $github-creds:dex.github.clientSecret
+            orgs:
+              - name: ${sso_org}
+  rbac:
+    create: true
+    policy.default: 'role:readonly'
+    policy.csv: |
+      p, role:org-admin, applications, *, */*, allow
+      p, role:org-admin, clusters, get, *, allow
+      p, role:org-admin, repositories, get, *, allow
+      p, role:org-admin, repositories, create, *, allow
+      p, role:org-admin, repositories, update, *, allow
+      p, role:org-admin, repositories, delete, *, allow
+      p, role:org-admin, projects, get, *, allow
+      p, role:org-admin, projects, create, *, allow
+      p, role:org-admin, projects, update, *, allow
+      p, role:org-admin, projects, delete, *, allow
+      p, role:org-admin, logs, get, *, allow
+      p, role:org-admin, exec, create, */*, allow
+      g, ${sso_org}:${admin_team_name}, role:org-admin
+    scopes: "[groups]"
+%{ endif }
+%{ endif }
+  repositories:
+    private-repo:
+      url: ${gitops_repo_url}
+      name: GitOps-Repo
+      type: git
+      username: ${gitops_repo_username}
+      password: ${gitops_repo_password}
+redis-ha:
+  enabled: true
+dex:
+  enabled: true
+crds:
+  install: true
+controller:
+  enableStatefulSet: true
+server:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+  serviceAccount:
+    create: true
+    name: ${sa_name}
+  ingress:
+    enabled: true
+    ingressClassName: "kong"
+    annotations:
+      cloud.google.com/neg: "{'ingress': true}"
+      external-dns.alpha.kubernetes.io/hostname: ${hostname}
+      kubernetes.io/tls-acme: true
+      certmanager.k8s.io/acme-challenge-type: http01
+      cert-manager.io/cluster-issuer: "${certificate_issuer_name}"
+    hosts:
+      - ${hostname}
+    tls:
+      - secretName: "argo"
+        hosts:
+          - ${hostname}
+  config:
+    url: "https://${hostname}"
+    statusbadge.enabled: true
+    exec.enabled: true
+  extraArgs:
+    - --insecure
+repoServer:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  autoscaling:
+    enabled: true
+    minReplicas: 2

@@ -1,0 +1,5 @@
+%{ if keda_poc_enabled ~}
+serviceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: ${keda_operator_role_arn}
+%{ endif ~}
