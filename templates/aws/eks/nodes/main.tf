@@ -19,6 +19,7 @@ module "eks_managed_node_groups" {
 
   create_iam_role                   = true
   iam_role_name                     = var.iam_node_group_role
+  iam_role_use_name_prefix          = false
   iam_role_attach_cni_policy        = true
   iam_role_additional_policies      = merge({ "additional_policy" = module.additional_policy.arn }, var.iam_role_nodes_additional_policies)
   network_interfaces                = var.network_interfaces

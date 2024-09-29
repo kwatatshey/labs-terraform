@@ -6,6 +6,21 @@ spec:
   amiFamily: AL2
   role: ${role_name}
   detailedMonitoring: true
+
+  metadataOptions:
+    httpEndpoint: enabled
+    httpProtocolIPv6: disabled
+    httpPutResponseHopLimit: 2
+    httpTokens: required
+
+  blockDeviceMappings:
+    - deviceName: /dev/xvda
+      ebs:
+        volumeSize: 40Gi
+        volumeType: gp3
+        encrypted: true
+        deleteOnTermination: true
+
   subnetSelectorTerms:
     - tags:
         karpenter.sh/discovery: ${cluster_name}/public

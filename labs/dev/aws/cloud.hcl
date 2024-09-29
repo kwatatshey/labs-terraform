@@ -23,11 +23,11 @@ remote_state {
   }
   config = {
     # disable_bucket_update = true
-    bucket = "terraform-sbxx-state-${local.my_account}"
+    bucket = "terraform-sbx-state-${local.my_account}"
     key     = "${path_relative_to_include()}/terraform.tfstate"
     region  = "${local.my_region}"
     encrypt = true
-    dynamodb_table = "terraform-sbxx-state-lock-${local.my_account}"
+    dynamodb_table = "terraform-sbx-state-lock-${local.my_account}"
     # skip_metadata_api_check = true
 
     s3_bucket_tags = {

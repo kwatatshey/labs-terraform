@@ -9,14 +9,15 @@ resource "helm_release" "argo-events" {
 }
 
 resource "helm_release" "argo-workflows" {
-  name       = var.argo_workflows_chart_name
-  chart      = var.argo_workflows_chart_name
-  repository = var.repository
-  version    = var.argo_workflows_chart_version
-  namespace  = var.namespace
-  wait       = true
+  name             = var.argo_workflows_chart_name
+  chart            = var.argo_workflows_chart_name
+  repository       = var.repository
+  version          = var.argo_workflows_chart_version
+  create_namespace = var.create_namespace
+  namespace        = var.namespace
+  wait             = true
 
-  values     = [
+  values = [
     local.argo_workflows_values_yaml
   ]
 

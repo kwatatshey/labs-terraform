@@ -13,7 +13,7 @@ module "labs_repository" {
   count              = var.slack_poc_enabled ? 1 : 0
   source             = "../github_repositories"
   namespace          = var.namespace
-  github_org         = "Opsfleet"
+  github_org         = "kwatatshey"
   github_repo        = "labs-terraform"
   create_github_repo = false
 }

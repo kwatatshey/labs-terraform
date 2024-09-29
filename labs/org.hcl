@@ -9,8 +9,8 @@ locals {
 
   # GitHub repositories to connect ArgoCD.
   github_repos = [
-    "pods",
-    "gitops",
-    "tst-nginx-repo"
+  #   "pods",
+  #   "gitops",
+  #   "tst-nginx-repo"
   ]
 }
