@@ -1,0 +1,14 @@
+{
+  "instance": {
+    "<instance-name>": "mrlsbat",
+    "<web-instance-name>": "MRLSBAT SIT instance",
+    "<repository-name>": "https://github.com/merck-gen/crweg-tdm-sbatui-airflow.git",
+    "<repository-branch>": "sit"
+  },  
+  "groups": {
+    "<group-type>": "Security",
+    "<msd-op-group>": "MRLSBAT-airflow-sit-admin-role",
+    "<msd-viewer-group>": "MRLSBAT-airflow-sit-analyst-role",
+    "<msd-user-group>": "MRLSBAT-airflow-sit-developer-role"
+  }
+}

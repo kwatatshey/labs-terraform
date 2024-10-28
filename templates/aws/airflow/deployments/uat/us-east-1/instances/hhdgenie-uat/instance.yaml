@@ -1,0 +1,12 @@
+params:
+  instance-name: hhdgenie
+  web-instance-name: HHDGENIE UAT instance
+  repository-name: https://github.com/merck-gen/cdata-dgenie-us-airflow.git
+  repository-branch: uat
+groups:
+  type: Security
+  mapping:
+    hhdda-dgenie-airflow-op-henv: msd_op_uat
+    hhdda-dgenie-airflow-user-henv: msd_user_uat
+    hhdda-dgenie-airflow-viewer-henv: msd_viewer_uat
+    

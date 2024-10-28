@@ -1,6 +1,6 @@
 module "jenkins_irsa_role" {
   source                                 = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version                                = "5.10.0"
+  version                                = "5.44.2"
   create_role                            = true
   role_name_prefix                       = var.serviceaccount
   role_path                              = "/${var.cluster_name}/${var.namespace}/"

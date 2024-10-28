@@ -1,0 +1,14 @@
+params:
+  instance-name: mrltsm
+  web-instance-name: MRLTSM dev instance
+  repository-name: https://github.com/merck-gen/mrl-tnsm-tsm-airflow.git
+  repository-branch: dev
+groups:
+  type: Security
+  mapping:
+    mrltsm-airflow-dev-admin-role: msd_op_dev
+    mrltsm-airflow-dev-developer-role: msd_user_dev
+    mrltsm-airflow-dev-analyst-role: msd_viewer_dev
+size:
+  dags-count: 100
+  concurent-tasks: 96

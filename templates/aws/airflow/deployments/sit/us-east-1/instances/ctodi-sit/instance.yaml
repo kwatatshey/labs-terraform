@@ -1,0 +1,12 @@
+params:
+  instance-name: ctodi
+  web-instance-name: CTODI SIT instance
+  repository-name: https://github.com/merck-gen/mf-difw-eks-airflow.git
+  repository-branch: airflow-tst
+groups:
+  type: Security
+  mapping:
+    DIFWSIT-ADMN-ROLE: msd_op_sit
+    DIFWSIT-DEVEL-ROLE: msd_user_sit
+    DIFWSIT-ANLYS-ROLE: msd_viewer_sit
+    

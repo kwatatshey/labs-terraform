@@ -1,0 +1,14 @@
+{
+  "instance": {
+    "<instance-name>": "mmdgse",
+    "<web-instance-name>": "MMDGSE UAT instance",
+    "<repository-name>": "https://github.com/merck-gen/gse-analytics.git",
+    "<repository-branch>": "airflow-sit"
+  },  
+  "groups": {
+    "<group-type>": "Security",
+    "<msd-op-group>": "GSESIT-DVLPR-ROLE",
+    "<msd-viewer-group>": "GSESIT-ANLYS-ROLE",
+    "<msd-user-group>": "GSESIT-ADMIN-ROLE"
+  }
+}

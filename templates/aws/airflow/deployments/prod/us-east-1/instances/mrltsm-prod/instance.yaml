@@ -1,0 +1,16 @@
+params:
+  instance-name: mrltsm
+  web-instance-name: MRLTSM PROD instance
+  repository-name: https://github.com/merck-gen/mrl-tnsm-tsm-airflow.git
+  repository-branch: prod
+groups:
+  type: Security
+  mapping:
+    mrltsm-airflow-prd-admin-role: msd_op_prod
+    mrltsm-airflow-prd-developer-role: msd_user_prod
+    mrltsm-airflow-prd-analyst-role: msd_viewer_prod
+size:
+  dags_count: 100
+  concurent_tasks: 96
+
+    

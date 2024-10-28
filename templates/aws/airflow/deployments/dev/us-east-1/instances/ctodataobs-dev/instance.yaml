@@ -1,0 +1,17 @@
+params:
+  instance-name: ctodataobs
+  web-instance-name: CTODATAOBS DEV instance
+  repository-name: https://github.com/merck-gen/cpd-dataobs-airflow-eks-dags.git
+  repository-branch: develop
+  project-ci: dataobs
+  requester: Duchek, Zdenek
+  main-contact: zdenek.duchek@merck.com
+  team: dataobs
+  jira-key: EEA-790
+groups:
+  type: Security
+  mapping:
+    gin-dataobs-team: msd_op_dev
+size:
+  dags_count: 5
+  concurent_tasks: 6

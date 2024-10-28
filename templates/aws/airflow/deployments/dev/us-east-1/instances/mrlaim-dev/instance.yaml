@@ -1,0 +1,11 @@
+params:
+  instance-name: mrlaim
+  web-instance-name: MRLAIM DEV instance
+  repository-name: https://github.com/merck-gen/mrl-mrlaims-dbt-airflow.git
+  repository-branch: airflow-dev
+groups:
+  type: Security
+  mapping:
+    MRLAIM-airflow-eks-dev-admin-role-Member: msd_op_dev
+    MRLAIM-airflow-eks-dev-developer-role-Member: msd_user_dev
+    MRLAIM-airflow-eks-dev-analyst-role-Member: msd_viewer_dev

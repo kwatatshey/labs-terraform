@@ -1,0 +1,18 @@
+params:
+  instance-name: ahjedird
+  web-instance-name: AHJEDIRD PROD instance
+  repository-name: https://github.com/merck-gen/ahjedi-rd-difw-airflow.git
+  repository-branch: airflow-prod
+  project-ci: ahjedi
+  requester: Toth, Tamas
+  main-contact: tamas.toth1@merck.com
+  team: ahjedi
+groups:
+  type: Security
+  mapping:
+    ahjedi-rd-airflow-developer-prod: msd_op_prod
+    ahjedi-rd-airflow-executor-prod: msd_user_prod
+    ahjedi-rd-airflow-viewer-prod: msd_viewer_prod
+size:
+  dags_count: 30
+  concurent_tasks: 10

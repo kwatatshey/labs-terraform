@@ -1,0 +1,12 @@
+params:
+  instance-name: eitgwes
+  web-instance-name: EITGWES PROD instance
+  repository-name: https://github.com/merck-gen/gwesdl-aws-datalake.git
+  repository-branch: airflow-prd
+groups:
+  type: Security
+  mapping:
+    GWESDL-airflow-prod-admin-role: msd_op_prod
+    GWESDL-airflow-prod-developer-role: msd_user_prod
+    GWESDL-airflow-prod-analyst-role: msd_viewer_prod
+    

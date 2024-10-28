@@ -1,5 +1,9 @@
+# terraform {
+#   source = "${get_repo_root()}/templates/aws/charts/observability"
+# }
+
 terraform {
-  source = "${get_repo_root()}/templates/aws/charts/observability"
+  source = "git::git@github.com:kwatatshey/labs-terraform-modules.git//templates/aws/charts/observability"
 }
 
 # For Inputs
@@ -105,7 +109,7 @@ inputs = {
   acm_certificate_arn                             = dependency.eks.outputs.acm_certificate_arn
   cluster_oidc_provider_arn                       = dependency.eks.outputs.eks_oidc_provider_arn
 
-  #Kubeshark
+  # Kubeshark
   kubeshark_enabled                               = true
   kubeshark_namespace                             = "kubeshark"
 
@@ -122,10 +126,10 @@ inputs = {
   # loki_stack_github_oauth_allowed_domains         = ""
   # loki_stack_github_oauth_allowed_organizations   = ""
   # loki_stack_github_oauth_allowed_team_ids        = ""
-  loki_stack_github_oauth_enabled                 = false
+  loki_stack_github_oauth_enabled                 = true
 
-  #Jaeger
-  jaeger_enabled                                  = false
+  # Jaeger
+  jaeger_enabled                                  = true
   jaeger_namespace                                = "jaeger"
-  jaeger_demo_app_enabled                         = false
+  jaeger_demo_app_enabled                         = true
 }

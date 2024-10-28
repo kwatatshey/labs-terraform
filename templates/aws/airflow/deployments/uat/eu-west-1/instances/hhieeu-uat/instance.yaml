@@ -1,0 +1,12 @@
+params:
+  instance-name: hhieeu
+  web-instance-name: HHIE EU UAT instance
+  repository-name: https://github.com/merck-gen/hhie-module-airflow-eucan.git
+  repository-branch: uat
+groups:
+  type: Security
+  mapping:
+    hhieeu-airflow-uat-op: msd_op_uat
+    hhieeu-airflow-uat-user: msd_user_uat
+    hhieeu-airflow-uat-viewer: msd_viewer_uat
+    

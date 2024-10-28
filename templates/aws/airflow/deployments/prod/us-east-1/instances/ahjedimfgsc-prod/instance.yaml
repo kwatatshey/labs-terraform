@@ -1,0 +1,14 @@
+params:
+  instance-name: ahjedimfgsc
+  web-instance-name: AHJEDIMFGSC PROD instance
+  repository-name: https://github.com/merck-gen/ahjedi-mfgsc-difw-airflow.git
+  repository-branch: airflow-prod
+groups:
+  type: Security
+  mapping:
+    ahjedi-mfgsc-airflow-developer-prod: msd_op_prod
+    ahjedi-mfgsc-airflow-executor-prod: msd_user_prod
+    ahjedi-mfgsc-airflow-viewer-prod: msd_viewer_prod
+size:
+  dags_count: 10
+  concurent_tasks: 10

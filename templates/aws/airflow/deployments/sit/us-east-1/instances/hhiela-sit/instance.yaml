@@ -1,0 +1,14 @@
+params:
+  instance-name: hhiela
+  web-instance-name: HHIELA SIT instance
+  repository-name: https://github.com/merck-gen/hhie-module-airflow-latam.git
+  repository-branch: tst
+groups:
+  type: Security
+  mapping:
+    hhiela-airflow-tst-op: msd_op_sit
+    hhiela-airflow-tst-user: msd_user_sit
+    hhiela-airflow-tst-viewer: msd_viewer_sit
+size:
+  dags_count: 1000
+  concurent_tasks: 90

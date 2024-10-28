@@ -1,0 +1,15 @@
+params:
+  instance-name: hhieap
+  web-instance-name: HHIEAP PROD instance
+  repository-name: https://github.com/merck-gen/hhie-module-airflow-ap
+  repository-branch: prd
+groups:
+  type: Security
+  mapping:
+    hhieap-airflow-prd-op: msd_op_prod
+    hhieap-airflow-prd-user: msd_user_prod
+    hhieap-airflow-prd-viewer: msd_viewer_prod
+size:
+  dags_count: 3500
+  concurent_tasks: 1000
+  

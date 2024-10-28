@@ -1,0 +1,14 @@
+{
+  "instance": {
+    "<instance-name>": "mrlodm",
+    "<web-instance-name>": "MRL ODM DEV instance",
+    "<repository-name>": ":https://github.com/merck-gen/peac-odm-airflow.git",
+    "<repository-branch>": "dev"
+  },  
+  "groups": {
+    "<group-type>": "Security",
+    "<msd-op-group>": "ODM-airflow-dev-admin-role",
+    "<msd-viewer-group>": "ODM-airflow-dev-analyst-role",
+    "<msd-user-group>": "ODM-airflow-dev-developer-role"
+  }
+}

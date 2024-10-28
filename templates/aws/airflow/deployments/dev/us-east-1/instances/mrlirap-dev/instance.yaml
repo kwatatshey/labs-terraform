@@ -1,0 +1,13 @@
+params:
+  instance-name: mrlirap
+  web-instance-name: MRLIRAP DEV instance
+  repository-name: https://github.com/merck-gen/crweg-irap-data-ingest.git
+  repository-branch: airflow-dev
+groups:
+  type: Security
+  mapping:
+    cd_iRAP_owners: msd_op_dev
+    irap-users-dev: msd_user_dev
+size:
+  dags_count: 10
+  concurent_tasks: 2

@@ -36,6 +36,22 @@ module "kong" {
   source    = "./kong_ingress_controller"
   namespace = var.kong_namespace
 }
+# IF Both alb_controller_enabled and kong_enabled are set to true, none will be created
+# Because of the logical conditions 
+# count     = var.kong_enabled && !var.alb_controller_enabled ? 1 : 0
+# count                     = var.alb_controller_enabled && !var.kong_enabled ? 1 : 0
+# Meaning Only one of them can be enabled at a time or isolte condition as follows:
+
+# module "alb-controller" {
+#   count = var.alb_controller_enabled ? 1 : 0
+#   ...
+# }
+
+# module "kong" {
+#   count = var.kong_enabled ? 1 : 0
+#   ...
+# }
+
 
 module "aws_node_termination_handler" {
   count        = var.aws_node_termination_handler_enabled ? 1 : 0

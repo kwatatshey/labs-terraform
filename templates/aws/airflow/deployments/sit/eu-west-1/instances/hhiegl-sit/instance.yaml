@@ -1,0 +1,12 @@
+params:
+  instance-name: hhiegl
+  web-instance-name: HHIEGL SIT instance
+  repository-name: https://github.com/merck-gen/hhie-module-airflow-gl.git
+  repository-branch: tst
+groups:
+  type: Security
+  mapping:
+    hhiegl-airflow-tst-op: msd_op_sit
+    hhiegl-airflow-tst-user: msd_user_sit
+    hhiegl-airflow-tst-viewer: msd_viewer_sit
+    

@@ -1,0 +1,12 @@
+params:
+  instance-name: mrldpubs
+  web-instance-name: MRLDPUBS UAT instance
+  repository-name: https://github.com/merck-gen/ddc-dp-mrldpubs-polaris-pub-airflow
+  repository-branch: uat
+groups:
+  type: Security
+  mapping:
+    MRLDPUBS-airflow-admin-uat-Member: msd_op_uat
+    MRLDPUBS-airflow-developer-uat-Member: msd_user_uat
+    MRLDPUBS-airflow-analyst-uat-Member: msd_viewer_uat
+    

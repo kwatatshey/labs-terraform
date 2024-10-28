@@ -1,0 +1,14 @@
+params:
+  instance-name: hhdgenie
+  web-instance-name: HHDGENIE DEV instance
+  repository-name: https://github.com/merck-gen/cdata-dgenie-us-airflow.git
+  repository-branch: dev
+groups:
+  type: Security
+  mapping:
+    hhdda-dgenie-airflow-op-dev: msd_op_dev
+    hhdda-dgenie-airflow-user-dev: msd_user_dev
+    hhdda-dgenie-airflow-viewer-dev: msd_viewer_dev
+size:
+  dags_count: 350
+  concurent_tasks: 48

@@ -1,0 +1,16 @@
+params:
+  instance_name: mrltsm
+  web_instance_name: MRLTSM sit instance
+  repository_name: https://github.com/merck-gen/mrl-tnsm-tsm-airflow.git
+  repository_branch: sit
+groups:
+  type: Security
+  mapping:
+    mrltsm-airflow-tst-admin-role: msd_op_sit
+    mrltsm-airflow-tst-developer-role: msd_user_sit
+    mrltsm-airflow-tst-analyst-role: msd_viewer_sit
+size:
+  dags_count: 100
+  concurent_tasks: 96
+switches:
+  tf_template_string: exp-sit

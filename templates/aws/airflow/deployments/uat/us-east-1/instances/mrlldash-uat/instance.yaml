@@ -1,0 +1,12 @@
+params:
+  instance-name: mrlldash
+  web-instance-name: MRLLDASH UAT instance
+  repository-name: https://github.com/merck-gen/mrl-mrlldash-dbt-airflow.git
+  repository-branch: release-uat
+groups:
+  type: Security
+  mapping:
+    MRLLDASH-airflow-tst-owner-role: msd_op_uat
+    MRLLDASH-airflow-tst-developer-role: msd_user_uat
+    MRLLDASH-airflow-tst-analyst-role: msd_viewer_uat
+    

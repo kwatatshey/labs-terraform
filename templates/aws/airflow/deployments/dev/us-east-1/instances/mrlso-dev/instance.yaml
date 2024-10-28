@@ -1,0 +1,12 @@
+params:
+  instance-name: mrlso
+  web-instance-name: MRLSO DEV instance
+  repository-name: https://github.com/merck-gen/mrl-mrldpubs-so-airflow.git
+  repository-branch: dev
+groups:
+  type: Security
+  mapping:
+    MRLSO-airflow-dev-admin-role: msd_op_dev
+    MRLSO-airflow-dev-developer-role: msd_user_dev
+    MRLSO-airflow-dev-analyst-role: msd_viewer_dev
+    

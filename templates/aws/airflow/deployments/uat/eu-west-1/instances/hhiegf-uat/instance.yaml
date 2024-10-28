@@ -1,0 +1,12 @@
+params:
+  instance-name: hhiegf
+  web-instance-name: HHIEGF UAT instance
+  repository-name: https://github.com/merck-gen/hhie-module-airflow-gf.git
+  repository-branch: uat
+groups:
+  type: Security
+  mapping:
+    hhiegf-airflow-uat-op: msd_op_uat
+    hhiegf-airflow-uat-user: msd_user_uat
+    hhiegf-airflow-uat-viewer: msd_viewer_uat
+    

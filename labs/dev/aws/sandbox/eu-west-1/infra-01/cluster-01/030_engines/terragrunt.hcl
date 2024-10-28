@@ -1,5 +1,9 @@
+# terraform {
+#   source = "${get_repo_root()}/templates/aws/charts/engines"
+# }
+
 terraform {
-  source = "${get_repo_root()}/templates/aws/charts/engines"
+  source = "git::git@github.com:kwatatshey/labs-terraform-modules.git//templates/aws/charts/engines"
 }
 
 # For Inputs
@@ -57,7 +61,7 @@ inputs = {
   cluster_oidc_provider_arn                = dependency.eks.outputs.eks_oidc_provider_arn
   eks_oidc_issuer_url                      = dependency.eks.outputs.eks_oidc_issuer_url
   cluster_secret_store_ref_name            = dependency.system_charts.outputs.cluster_secret_store_ref_name
-        
+
   # jenkins         
   jenkins_enabled                          = true
   jenkins_namespace                        = "jenkins"

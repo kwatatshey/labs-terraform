@@ -1,0 +1,14 @@
+{
+  "instance": {
+    "<instance-name>": "gomfirefly",
+    "<web-instance-name>": "FireFly PROD instance",
+    "<repository-name>": "INSERT",
+    "<repository-branch>": "INSERT"
+  },  
+  "groups": {
+    "<group-type>": "Security",
+    "<msd-op-group>": "INSERT",
+    "<msd-viewer-group>": "INSERT",
+    "<msd-user-group>": "INSERT"
+  }
+}

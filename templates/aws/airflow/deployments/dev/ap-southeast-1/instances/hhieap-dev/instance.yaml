@@ -1,0 +1,12 @@
+params:
+  instance-name: hhieap
+  web-instance-name: HHIEAP DEV instance
+  repository-name: https://github.com/merck-gen/hhie-module-airflow-ap.git
+  repository-branch: dev
+groups:
+  type: Security
+  mapping:
+    hhieap-airflow-dev-op: msd_op_dev
+    hhieap-airflow-dev-user: msd_user_dev
+    hhieap-airflow-dev-viewer: msd_viewer_dev
+    

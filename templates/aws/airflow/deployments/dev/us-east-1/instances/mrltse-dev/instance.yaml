@@ -1,0 +1,14 @@
+params:
+  instance-name: mrltse
+  web-instance-name: MRLTSE dev instance
+  repository-name: https://github.com/merck-gen/mrl-tnsm-tse-airflow.git
+  repository-branch: dev
+groups:
+  type: Security
+  mapping:
+    mrltse-airflow-dev-admin-role: msd_op_dev
+    mrltse-airflow-dev-developer-role: msd_user_dev
+    mrltse-airflow-dev-analyst-role: msd_viewer_dev
+size:
+  dags-count: 100
+  concurent-tasks: 96

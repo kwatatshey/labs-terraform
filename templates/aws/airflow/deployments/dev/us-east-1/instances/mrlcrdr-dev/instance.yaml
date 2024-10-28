@@ -1,0 +1,18 @@
+params:
+  instance-name: mrlcrdr
+  web-instance-name: MRLCRDR DEV instance
+  repository-name: https://github.com/merck-gen/mrl-crdr-airflow
+  repository-branch: develop
+  project-ci: CRDR
+  requester: Joshi, Devashree
+  main-contact: devashree.joshi1@merck.com
+  team: MRL IT
+  jira-key: EEA-825
+groups:
+  type: Security
+  mapping:
+    CRDR-airflow-admin-dev: msd_op_dev
+    CRDR-airflow-developer-dev: msd_user_dev
+size:
+  dags_count: 10
+  concurent_tasks: 10

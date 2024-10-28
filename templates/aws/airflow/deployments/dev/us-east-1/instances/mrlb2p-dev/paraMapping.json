@@ -1,0 +1,14 @@
+{
+  "instance": {
+    "<instance-name>": "mrlb2p",
+    "<web-instance-name>": "MRLB2P DEV instance",
+    "<repository-name>": "https://github.com/merck-gen/mrl-mrlb2p-airflow.git",
+    "<repository-branch>": "dev"
+  },  
+  "groups": {
+    "<group-type>": "Security",
+    "<msd-op-group>": "MRLB2P-airflow-dev-admin-role",
+    "<msd-viewer-group>": "MRLB2P-airflow-dev-analyst-role",
+    "<msd-user-group>": "MRLB2P-airflow-dev-developer-role"
+  }
+}

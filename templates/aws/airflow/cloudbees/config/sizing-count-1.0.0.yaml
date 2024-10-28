@@ -1,0 +1,37 @@
+info:
+  version: 1.0.0
+terraform_count:
+  rds_allocated_storage: "if ((dags_count>150)); then result=50; else result=30; fi"
+  rds_instance_class: "if ((dags_count>500)); then result=db.t3.large; elif ((dags_count>150)); then result=db.t3.medium; else result=db.t3.small; fi"
+  rds_backup_retention_period: "if $is_production ; then result=31; else result=7; fi"
+  redis_multi_az_enabled: "if $is_production ; then result=true; else result=false; fi"
+  redis_num_cache_clusters: "if $is_production ; then result=2; else result=1; fi"
+  redis_automatic_failover: "if $is_production ; then result=true; else result=false; fi"
+flux_count:
+  flower_cpu: "result=0.25"
+  flower_memory: "result=256Mi"
+  pgbouncer_cpu: "result=0.15"
+  pgbouncer_memory: "result=128Mi"
+  statsd_cpu: "result=0.25"
+  statsd_memory: "result=256Mi"
+  triggerer_cpu: "result=0.15"
+  triggerer_memory: "result=640Mi"
+  webserver_cpu: "if ((dags_count>50)); then result=1; else result=0.5; fi"
+  webserver_memory: "if ((dags_count>50)); then result=2816Mi; else result=1792Mi; fi"
+  scheduler_cpu: "if ((dags_count>500)); then result=7.8; elif ((dags_count>150)); then result=3.8; elif ((dags_count>50)); then result=1.8; else result=0.8; fi"
+  scheduler_memory: "if ((dags_count>500)); then result=15872Mi; elif ((dags_count>150)); then result=7680Mi; elif ((dags_count>50)); then result=3584Mi; else result=1536Mi; fi"
+  worker_cpu: "if ((concurent_tasks>23)); then result=3.8; else result=0.8; fi"
+  worker_memory: "if ((concurent_tasks>23)); then result=10752Mi; else result=2560Mi; fi"
+  core_parallelism: "result=1000"
+  core_max_active_tasks_per_dag: "result=1000"
+  scheduler_parsing_processes: "if ((dags_count>500)); then result=15; elif ((dags_count>150)); then result=7; elif ((dags_count>50)); then result=3; else result=1; fi"
+  scheduler_min_file_process_interval: "y=$(awk -v vresult=$result -v vdagsc=$dags_count 'BEGIN {x=(vdagsc/vresult*3+10+15)/30; print x}'); z=$(printf %.0f $y); result=$((30*z))"
+  scheduler_dag_dir_list_interval: "result=$((result+10))"
+  webserver_workers: "if ((dags_count>50)); then result=4; else result=2; fi"
+  celery_worker_concurrency: "if ((concurent_tasks>23)); then result=24; else result=6; fi"
+  keda_max_replica_count: "y=$(awk -v vresult=$result -v vcontasks=$concurent_tasks 'BEGIN {x=vcontasks/vresult; print x}'); result=$(printf %.0f $y)"
+  keda_min_replica_count: "y=$(awk -v vresult=$result 'BEGIN {x=vresult/4.0+0.5; print x}'); z=$(printf %.0f $y); if $is_production ; then result=$z; else result=1; fi"
+cost_count:
+  min_workers_cost: "y=$(awk 'BEGIN {x=8*0.0162337*30*24+20.992*0.00178258*30*24+40.89; print x}'); result=$(printf %.0f $y)"
+  max_workers_cost: "y=$(awk 'BEGIN {x=20*0.0162337*30*24+54.784*0.00178258*30*24+40.89; print x}'); result=$(printf %.0f $y)"
+  

@@ -1,0 +1,16 @@
+params:
+  instance-name: mrltfm
+  web-instance-name: MRLTFM UAT instance
+  repository-name: https://github.com/merck-gen/mrl-tnsm-tfm-airflow.git
+  repository-branch: uat
+groups:
+  type: Security
+  mapping:
+    mrltfm-airflow-uat-admin-role: msd_op_uat
+    mrltfm-airflow-uat-developer-role: msd_user_uat
+    mrltfm-airflow-uat-analyst-role: msd_viewer_uat
+size:
+  dags_count: 100
+  concurent_tasks: 96
+
+    

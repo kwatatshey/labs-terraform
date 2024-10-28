@@ -1,0 +1,14 @@
+params:
+  instance-name: sbxtspotcldself
+  web-instance-name: SBXTSPOTCLDSELF DEV instance
+  repository-name: https://github.com/merck-gen/dspm-eea-airflow-eks-dags-sbxtspotcldself
+  repository-branch: main
+groups:
+  type: Security
+  mapping:
+    dbricks-cdnas-dev-us-tspotcld-developers: msd_op_dev
+    dbricks-cdnas-dev-us-tspotcld-developers: msd_user_dev
+    dbricks-cdnas-dev-us-tspotcld-developers: msd_viewer_dev
+size:
+  dags_count: 10
+  concurent_tasks: 10

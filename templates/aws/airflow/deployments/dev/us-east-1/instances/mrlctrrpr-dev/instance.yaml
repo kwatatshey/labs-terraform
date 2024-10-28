@@ -1,0 +1,12 @@
+params:
+  instance-name: mrlctrrpr
+  web-instance-name: MRL CTRRPR DEV instance
+  repository-name: https://github.com/merck-gen/mrl-mrldpubs-ctrrpr-dbt-airflow.git
+  repository-branch: dev
+groups:
+  type: Security
+  mapping:
+    MRLCTRRPR-airflow-dev-admin-role: msd_op_dev
+    MRLCTRRPR-airflow-dev-developer-role: msd_user_dev
+    MRLCTRRPR-airflow-dev-analyst-role: msd_viewer_dev
+    

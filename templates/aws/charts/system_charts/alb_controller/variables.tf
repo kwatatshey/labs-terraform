@@ -1,7 +1,7 @@
 variable "name" {
   type        = string
   description = "Name of release"
-  default     = "alb-controller"
+  default     = "aws-load-balancer-controller"
 }
 
 variable "namespace" {
@@ -13,19 +13,19 @@ variable "namespace" {
 variable "chart_version" {
   type        = string
   description = "Helm chart to release"
-  default     = "1.6.1"
+  default     = "1.8.4"
 }
 
 variable "create_role_enabled" {
   type        = bool
   description = "Enable or not chart as a component"
-  default     = false
+  default     = true
 }
 
 variable "serviceaccount" {
   type        = string
   description = "Serviceaccount name"
-  default     = "alb-controller"
+  default     = "aws-load-balancer-controller"
 }
 
 variable "region" {

@@ -1,0 +1,15 @@
+params:
+  instance-name: mrlcrwegcdl
+  web-instance-name: MRLCRWEGCDL SIT instance
+  repository-name: https://github.com/merck-gen/crweg-cdl-encoder-int-airflow
+  repository-branch: test
+groups:
+  type: Security
+  mapping:
+    CDLENC-airflow-tst-admin-role: msd_op_sit
+    CDLENC-airflow-tst-developer-role: msd_user_sit
+    CDLENC-airflow-tst-analyst-role: msd_viewer_sit
+size:
+  dags_count: 25
+  concurent_tasks: 5
+  

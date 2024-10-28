@@ -1,0 +1,20 @@
+params:
+  instance-name: ahjedicommercial
+  web-instance-name: AHJEDICOMMERCIAL SIT instance
+  repository-name: https://github.com/merck-gen/ahjedi-commercial-difw-airflow.git
+  repository-branch: airflow-test
+  project-ci: ahjedi
+  requester: Toth, Tamas
+  main-contact: tamas.toth1@merck.com
+  team: ahjedi commercial
+  jira-key: EEA-822
+groups:
+  type: Security
+  mapping:
+    ahjedi-commercial-airflow-developer-test: msd_op_sit
+    ahjedi-commercial-airflow-executor-test: msd_user_sit
+    ahjedi-commercial-airflow-viewer-test: msd_viewer_sit
+size:
+  dags_count: 70
+  concurent_tasks: 10
+  

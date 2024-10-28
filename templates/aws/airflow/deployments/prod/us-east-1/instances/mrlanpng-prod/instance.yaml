@@ -1,0 +1,12 @@
+params:
+  instance-name: mrlanpng
+  web-instance-name: MRLANPNG PROD instance
+  repository-name: https://github.com/merck-gen/mrl-mrlanpng-dbt-airflow.git
+  repository-branch: prd
+groups:
+  type: Security
+  mapping:
+    MRLANPNG-airflow-prd-admin-role: msd_op_prod
+    MRLANPNG-airflow-prd-developer-role: msd_user_prod
+    MRLANPNG-airflow-prd-analyst-role: msd_viewer_prod
+    

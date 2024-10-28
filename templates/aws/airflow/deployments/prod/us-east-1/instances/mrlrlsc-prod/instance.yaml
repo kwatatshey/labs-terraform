@@ -1,0 +1,12 @@
+params:
+  instance-name: mrlrlsc
+  web-instance-name: MRLRLSC PROD instance
+  repository-name: insert-repo
+  repository-branch: insert-branch
+groups:
+  type: Security
+  mapping:
+    group-1: msd_op_prod
+    group-2: msd_user_prod
+    group-3: msd_viewer_prod
+    

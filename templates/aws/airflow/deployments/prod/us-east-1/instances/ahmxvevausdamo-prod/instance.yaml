@@ -1,0 +1,20 @@
+params:
+  instance-name: ahmxvevausdamo
+  web-instance-name: AHMXVEVA US DAMO PROD instance
+  repository-name: https://github.com/merck-gen/ahmxveva-us-damo-airflow
+  repository-branch: main
+  project-ci: ahmxveva
+  requester: Tamas Toth
+  main-contact: tamas.toth1@merck.com
+  team: ahmxveva US damo
+groups:
+  type: Security
+  mapping:
+    ahmxveva-us-damo-airflow-developer: msd_op_prod
+    ahmxveva-us-damo-airflow-executor: msd_user_prod
+    ahmxveva-us-damo-airflow-viewer: msd_viewer_prod
+size:
+  dags_count: 70
+  concurent_tasks: 20
+switches:
+  is_force_flux_file_replacement: false

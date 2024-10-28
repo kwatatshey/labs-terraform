@@ -2,61 +2,8 @@
 #   source = "${get_repo_root()}/templates/aws/eks"
 # }
 
-# # For Inputs
-# include "root" {
-#   path   = find_in_parent_folders()
-#   expose = true
-# }
-
-# # For AWS provider & tfstate S3 backand
-# include "cloud" {
-#   path = find_in_parent_folders("cloud.hcl")
-# }
-
-# dependency "vpc" {
-#   config_path  = "../../vpc"
-#   mock_outputs = {
-#     vpc_id             = "vpc-1234"
-#     public_subnets     = ["subnet-1", "subnet-2", "subnet-3"]
-#     private_subnets    = ["subnet-4", "subnet-5", "subnet-6"]
-#     database_subnets   = ["subnet-7", "subnet-8", "subnet-9"]
-#     r53_parent_zone_id = "zone_id"
-#   }
-# }
-
-# locals {
-#   r53_hosted_zone_name = include.root.locals.my_account_conf.locals.r53_hosted_zone_name
-#   common_tags          = include.root.locals.my_env_conf.inputs.common_tags
-#   cluster_name         = read_terragrunt_config(find_in_parent_folders("cluster.hcl")).locals.cluster_name
-#   worker_nodes_kms_key_aliases = [format("eks/kms/sao/%s/ebs", local.cluster_name)]
-# }
-
-# inputs = {
-#   vpc_id                = dependency.vpc.outputs.vpc_id
-#   public_subnet_ids     = dependency.vpc.outputs.public_subnets
-#   private_subnet_ids    = dependency.vpc.outputs.private_subnets
-#   cluster_name          = local.cluster_name
-#   worker_nodes_kms_key_aliases = local.worker_nodes_kms_key_aliases
-#   # spot_instance_types   = ["t3.medium"]
-#   spot_instance_types   = ["m7i.4xlarge", "t3.small", "t3.medium", "t3.large", "t3a.small", "t3a.medium", "t3a.large", "t3.xlarge"]
-#   kubernets_version     = "1.30"
-#   # kubernets_version     = "1.28"
-#   r53_hosted_zone_name  = local.r53_hosted_zone_name
-#   tags                  = local.common_tags
-#   additional_policies  = {
-#     "AmazonEKSFargatePodExecutionRolePolicy" = "arn:aws:iam::aws:policy/AmazonEKSFargatePodExecutionRolePolicy"
-#   }
-#   fargate_profile_namespace = "demo" #deployed only when create_fargate_profile is true)
-#   fargate_profile_name      = "demo" #deployed only when create_fargate_profile is true)
-#   create_fargate_profile    = true
-# }
-
-
-############################################################################################
-
-
 terraform {
-  source = "${get_repo_root()}/templates/aws/eks"
+  source = "git::git@github.com:kwatatshey/labs-terraform-modules.git//templates/aws/eks"
 }
 
 # For Inputs

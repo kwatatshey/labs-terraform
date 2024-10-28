@@ -1,0 +1,12 @@
+params:
+  instance-name: hhdgenieeu
+  web-instance-name: HHDGENIEU SIT instance
+  repository-name: https://github.com/merck-gen/cdata-dgenie-eu-airflow
+  repository-branch: test
+groups:
+  type: Security
+  mapping:
+    hhdda-dgenie-airflow-eu-op-henv: msd_op_sit
+    hhdda-dgenie-airflow-eu-user-henv: msd_user_sit
+    hhdda-dgenie-airflow-eu-viewer-henv: msd_viewer_sit
+    

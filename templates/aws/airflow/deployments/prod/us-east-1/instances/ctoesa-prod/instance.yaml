@@ -1,0 +1,14 @@
+params:
+  instance-name: ctoesa
+  web-instance-name: CTOESA PROD instance
+  repository-name: https://github.com/merck-gen/esa-airflow.git
+  repository-branch: prod
+groups:
+  type: Security
+  mapping:
+    ESA_PRD_AMS: msd_op_prod
+    ESA_PRD_DEV: msd_user_prod
+    ESA_PRD_RO: msd_viewer_prod
+size:
+  dags_count: 10
+  concurent_tasks: 12

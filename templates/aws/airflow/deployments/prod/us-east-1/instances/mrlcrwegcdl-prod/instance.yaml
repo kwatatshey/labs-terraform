@@ -1,0 +1,19 @@
+params:
+  instance-name: mrlcrwegcdl
+  web-instance-name: MRLCRWEGCDL PROD instance
+  repository-name: https://github.com/merck-gen/crweg-cdl-encoder-int-airflow
+  repository-branch: main
+  project-ci: CDLENC
+  requester: Kotti Krishna Reddy
+  main-contact: krishna.reddy.kotti@merck.com
+  team: CDL
+  jira-key: EEA-787
+groups:
+  type: Security
+  mapping:
+    CDLENC-airflow-prd-admin-role: msd_op_prod
+    CDLENC-airflow-prd-developer-role: msd_user_prod
+    CDLENC-airflow-prd-analyst-role: msd_viewer_prod
+size:
+  dags_count: 15
+  concurent_tasks: 10

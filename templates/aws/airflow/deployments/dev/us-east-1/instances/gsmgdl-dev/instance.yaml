@@ -1,0 +1,14 @@
+params:
+  instance-name: gsmgdl
+  web-instance-name: GSM-WS DEV instance
+  repository-name: https://github.com/merck-gen/gsmgdl-airflow-dev.git
+  repository-branch: master
+groups:
+  type: Security
+  mapping:
+    gsmgdl-airflow-adm-dev: msd_op_dev
+    gsmgdl-airflow-devel-dev: msd_user_dev
+    gsmgdl-airflow-anl-dev: msd_viewer_dev
+size:
+  dags_count: 10
+  concurent_tasks: 10

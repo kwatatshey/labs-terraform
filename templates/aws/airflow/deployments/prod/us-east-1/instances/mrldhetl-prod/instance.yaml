@@ -1,0 +1,12 @@
+params:
+  instance-name: mrldhetl
+  web-instance-name: MRLDHETL PROD instance
+  repository-name: https://github.com/merck-gen/mrl-mrldhetl-airflow.git
+  repository-branch: prd
+groups:
+  type: Security
+  mapping:
+    MRLDHETL-airflow-prd-admin-role: msd_op_prod
+    MRLDHETL-airflow-prd-developer-role: msd_user_prod
+    MRLDHETL-airflow-prd-analyst-role: msd_viewer_prod
+    

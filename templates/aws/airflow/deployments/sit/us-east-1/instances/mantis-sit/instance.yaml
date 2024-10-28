@@ -1,0 +1,18 @@
+params:
+  instance-name: mantis
+  web-instance-name: MANTIS SIT instance
+  repository-name: https://github.com/merck-gen/mang-airflow-eks-tst
+  repository-branch: develop
+  project-ci: mantises
+  requester: Panchalingam, Dev Anand
+  main-contact: devanand.panchalingam@merck.com
+  team: Mantis
+groups:
+  type: Security
+  mapping:
+    mmdtst-airflow-op-role : msd_op_sit
+    mmdtst-airflow-viewer-role: msd_viewer_sit
+size:
+  dags_count: 330
+  concurent_tasks: 200
+  

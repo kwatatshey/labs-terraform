@@ -1,0 +1,14 @@
+params:
+  instance-name: mrldial
+  web-instance-name: MRLDIAL DEV instance
+  repository-name: https://github.com/merck-gen/mrl-mrldhetl-airflow
+  repository-branch: dev
+groups:
+  type: Security
+  mapping:
+    MRLDHETL-airflow-dev-admin-role: msd_op_dev
+    MRLDHETL-airflow-dev-developer-role: msd_user_dev
+    MRLDHETL-airflow-dev-analyst-role: msd_viewer_dev
+size:
+  dags_count: 300
+  concurent_tasks: 120

@@ -1,0 +1,12 @@
+params:
+  instance-name: mrlcsas
+  web-instance-name: MRL CSAS DEV instance
+  repository-name: https://github.com/merck-gen/mrl-mrldpubs-csas-dbt-airflow.git
+  repository-branch: dev
+groups:
+  type: Security
+  mapping:
+    MRLCSAS-airflow-dev-admin-role: msd_op_dev
+    MRLCSAS-airflow-dev-developer-role: msd_user_dev
+    MRLCSAS-airflow-dev-analyst-role: msd_viewer_dev
+    

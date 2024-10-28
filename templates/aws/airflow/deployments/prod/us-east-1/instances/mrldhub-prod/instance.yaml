@@ -1,0 +1,12 @@
+params:
+  instance-name: mrldhub
+  web-instance-name: MRLDHUB PROD instance
+  repository-name: https://github.com/merck-gen/mrl-mrldhub-dbt-airflow
+  repository-branch: prod
+groups:
+  type: Security
+  mapping:
+    MRLDHUB-airflow-prd-admin-role: msd_op_prod
+    MRLDHUB-airflow-prd-developer-role: msd_user_prod
+    MRLDHUB-airflow-prd-analyst-role: msd_viewer_prod
+    

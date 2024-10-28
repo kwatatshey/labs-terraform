@@ -1,0 +1,12 @@
+params:
+  instance-name: gsg
+  web-instance-name: GSG DEV instance
+  repository-name: https://github.com/merck-gen/gsg-eks-airflow
+  repository-branch: airflow-dev
+groups:
+  type: Security
+  mapping:
+    airflow-op-gsg-dev-sg: msd_op_dev
+    airflow-user-gsg-dev-sg: msd_user_dev
+    airflow-viewer-gsg-dev-sg: msd_viewer_dev
+    

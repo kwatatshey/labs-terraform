@@ -1,0 +1,17 @@
+params:
+  instance-name: mrltse
+  web-instance-name: MRLTSE uat instance
+  repository-name: https://github.com/merck-gen/mrl-tnsm-tse-airflow.git
+  repository-branch: uat
+groups:
+  type: Security
+  mapping:
+    mrltse-airflow-uat-admin-role: msd_op_dev
+    mrltse-airflow-uat-developer-role: msd_user_dev
+    mrltse-airflow-uat-analyst-role: msd_viewer_dev
+size:
+  dags_count: 100
+  concurent_tasks: 96
+switches:
+  tf_template_string: exp-uat
+  flux_template_string: exp-uat

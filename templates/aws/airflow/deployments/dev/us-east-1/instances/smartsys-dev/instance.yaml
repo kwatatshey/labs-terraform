@@ -1,0 +1,14 @@
+params:
+  instance-name: smartsys
+  web-instance-name: SMARTSYS DEV instance
+  repository-name: https://github.com/merck-gen/smart.git
+  repository-branch: develop
+groups:
+  type: Security
+  mapping:
+    SMARTSYS-airflow-dev-admin-role: msd_op_dev
+    SMARTSYS-airflow-dev-developer-role: msd_user_dev
+    SMARTSYS-airflow-dev-analyst-role: msd_viewer_dev
+size:
+  dags_count: 15
+  concurent_tasks: 10

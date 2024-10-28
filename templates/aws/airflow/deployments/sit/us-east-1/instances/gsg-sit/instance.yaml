@@ -1,0 +1,14 @@
+params:
+  instance-name: gsg
+  web-instance-name: GSG SIT instance
+  repository-name: https://github.com/merck-gen/gsg-eks-airflow.git
+  repository-branch: airflow-tst
+groups:
+  type: Security
+  mapping:
+    airflow-op-gsg-tst-sg: msd_op_sit
+    airflow-user-gsg-tst-sg: msd_user_sit
+size:
+  dags_count: 5
+  concurent_tasks: 5
+  

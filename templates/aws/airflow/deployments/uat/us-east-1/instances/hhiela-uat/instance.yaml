@@ -1,0 +1,14 @@
+params:
+  instance-name: hhiela
+  web-instance-name: HHIELA UAT instance
+  repository-name: https://github.com/merck-gen/hhie-module-airflow-latam.git
+  repository-branch: uat
+groups:
+  type: Security
+  mapping:
+    hhiela-airflow-uat-op: msd_op_uat
+    hhiela-airflow-uat-user: msd_user_uat
+    hhiela-airflow-uat-viewer: msd_viewer_uat
+size:
+  dags_count: 1000
+  concurent_tasks: 90

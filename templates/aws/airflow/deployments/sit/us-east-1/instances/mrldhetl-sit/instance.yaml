@@ -1,0 +1,11 @@
+params:
+  instance-name: mrldhetl
+  web-instance-name: MRLDHETL SIT instance
+  repository-name: https://github.com/merck-gen/mrl-mrldhetl-airflow.git
+  repository-branch: sit
+groups:
+  type: Security
+  mapping:
+    MRLDHETL-airflow-sit-admin-role: msd_op_sit
+    MRLDHETL-airflow-sit-developer-role: msd_user_sit
+    MRLDHETL-airflow-sit-analyst-role: msd_viewer_sit

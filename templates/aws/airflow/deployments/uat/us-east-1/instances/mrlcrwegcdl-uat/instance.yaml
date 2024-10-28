@@ -1,0 +1,15 @@
+params:
+  instance-name: mrlcrwegcdl
+  web-instance-name: MRLCRWEGCDL UAT instance
+  repository-name: https://github.com/merck-gen/crweg-cdl-encoder-int-airflow
+  repository-branch: uat
+groups:
+  type: Security
+  mapping:
+    CDLENC-airflow-uat-admin-role: msd_op_sit
+    CDLENC-airflow-uat-developer-role: msd_user_sit
+    CDLENC-airflow-uat-analyst-role: msd_viewer_sit
+size:
+  dags_count: 25
+  concurent_tasks: 5
+  

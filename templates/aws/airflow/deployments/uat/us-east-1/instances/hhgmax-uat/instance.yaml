@@ -1,0 +1,14 @@
+params:
+  instance-name: hhgmax
+  web-instance-name: HHGMAX UAT instance
+  repository-name: https://github.com/merck-gen/gmaxit-airflow.git
+  repository-branch: uat
+groups:
+  type: Security
+  mapping:
+    airflow-gmax-gtn-uat-developer-role: msd_op_uat
+    airflow-gmax-uat-analyst-role: msd_user_uat
+    airflow-gmax-uat-admin-role: msd_op_uat
+size:
+  dags_count: 300
+  concurent_tasks: 70

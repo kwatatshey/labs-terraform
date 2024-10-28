@@ -1,0 +1,14 @@
+params:
+  instance-name: hhieap
+  web-instance-name: HHIEAP UAT instance
+  repository-name: https://github.com/merck-gen/hhie-module-airflow-ap.git
+  repository-branch: uat
+groups:
+  type: Security
+  mapping:
+    hhieap-airflow-uat-op: msd_op_uat
+    hhieap-airflow-uat-user: msd_user_uat
+    hhieap-airflow-uat-viewer: msd_viewer_uat
+size:
+  dags_count: 3500
+  concurent_tasks: 1000

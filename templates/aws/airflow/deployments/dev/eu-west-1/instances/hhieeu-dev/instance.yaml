@@ -1,0 +1,14 @@
+params:
+  instance-name: hhieeu
+  web-instance-name: HHIE EU DEV instance
+  repository-name: https://github.com/merck-gen/hhie-module-airflow-eucan.git
+  repository-branch: dev
+groups:
+  type: Security
+  mapping:
+    hhieeu-airflow-dev-op: msd_op_dev
+    hhieeu-airflow-dev-user: msd_user_dev
+    hhieeu-airflow-dev-viewer: msd_viewer_dev
+size:
+  dags_count: 2500
+  concurent_tasks: 150

@@ -1,0 +1,14 @@
+params:
+  instance-name: mrlcrwegcdl
+  web-instance-name: MRLCRWEGCDL DEV instance
+  repository-name: https://github.com/merck-gen/crweg-cdl-encoder-int-airflow.git
+  repository-branch: dev
+groups:
+  type: Security
+  mapping:
+    CDLENC-airflow-dev-admin-role: msd_op_dev
+    CDLENC-airflow-dev-developer-role: msd_user_dev
+    CDLENC-airflow-dev-analyst-role: msd_viewer_dev
+size:
+  dags_count: 25
+  concurent_tasks: 5

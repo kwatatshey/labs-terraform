@@ -1,0 +1,14 @@
+params:
+  instance-name: mrldpgxp
+  web-instance-name: MRLDPGXP DEV instance
+  repository-name: https://github.com/merck-gen/ddc-dpubs-mrldpgxp-publication-airflow.git
+  repository-branch: develop
+groups:
+  type: Security
+  mapping:
+    MRLDPGXP-airflow-dev-admin-role: msd_op_dev
+    MRLDPGXP-airflow-dev-developer-role: msd_user_dev
+    MRLDPGXP-airflow-dev-analyst-role: msd_viewer_dev
+size:
+  dags_count: 10
+  concurent_tasks: 15 

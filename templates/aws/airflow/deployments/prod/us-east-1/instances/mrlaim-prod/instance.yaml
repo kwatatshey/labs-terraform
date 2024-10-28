@@ -1,0 +1,10 @@
+params:
+  instance-name: mrlaim
+  web-instance-name: MRL AIM PROD instance
+  repository-name: https://github.com/merck-gen/mrl-mrlaims-dbt-airflow.git
+  repository-branch: airflow-prd
+groups:
+  type: Security
+  mapping:
+    aim_mrl_dpl_dev: msd_viewer_prod
+    

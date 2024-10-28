@@ -1,0 +1,14 @@
+{
+  "instance": {
+    "<instance-name>": "mrlodm",
+    "<web-instance-name>": "MRLODM SIT instance",
+    "<repository-name>": "https://github.com/merck-gen/peac-odm-airflow.git",
+    "<repository-branch>": "tst"
+  },  
+  "groups": {
+    "<group-type>": "Security",
+    "<msd-op-group>": "ODM-airflow-tst-admin-role",
+    "<msd-viewer-group>": "ODM-airflow-tst-analyst-role",
+    "<msd-user-group>": "ODM-airflow-tst-developer-role"
+  }
+}

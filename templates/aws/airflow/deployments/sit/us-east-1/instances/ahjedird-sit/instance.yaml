@@ -1,0 +1,15 @@
+params:
+  instance-name: ahjedird
+  web-instance-name: AHJEDIRD SIT instance
+  repository-name: https://github.com/merck-gen/ahjedi-rd-difw-airflow.git
+  repository-branch: airflow-test
+groups:
+  type: Security
+  mapping:
+    ahjedi-rd-airflow-developer-test: msd_op_sit
+    ahjedi-rd-airflow-executor-test: msd_user_sit
+    ahjedi-rd-airflow-viewer-test: msd_viewer_sit
+size:
+  dags_count: 30
+  concurent_tasks: 10
+  

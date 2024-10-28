@@ -75,6 +75,44 @@ module "argo_rollouts" {
   dashboard_enabled          = var.argo_rollouts_dashboard_enabled
 }
 
+# AWS Load Balancer Controller  
+# module "aws_load_balancer_controller_irsa_role" {
+#   source                                 = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+#   version                                = "5.44.2"
+#   create_role                            = true
+#   role_name_prefix                       = "aws-load-balancer-controller"
+#   attach_load_balancer_controller_policy = true
+
+#   oidc_providers = {
+#     eks = {
+#       provider_arn               = var.cluster_oidc_provider_arn # The OIDC ARN for your EKS cluster
+#       namespace_service_accounts = ["kube-system:aws-load-balancer-controller"]
+#     }
+#   }
+# }
+# resource "helm_release" "aws_load_balancer_controller" {
+#   name       = "aws-load-balancer-controller"
+#   namespace  = "kube-system"
+#   repository = "https://aws.github.io/eks-charts"
+#   chart      = "aws-load-balancer-controller"
+#   version    = "1.8.4"
+
+#   values = [
+#     <<EOF
+#     clusterName: ${var.cluster_name}
+#     region: ${var.region}
+#     vpcId: ${var.vpc_id}
+#     serviceAccount:
+#       create: true
+#       name: "aws-load-balancer-controller"
+#       annotations:
+#         eks.amazonaws.com/role-arn: "${module.aws_load_balancer_controller_irsa_role.iam_role_arn}"
+#     EOF
+#   ]
+#   depends_on = [module.aws_load_balancer_controller_irsa_role]
+# }
+
+
 # module "github_runners" {
 #   source                        = "./github_runners"
 #   enabled                       = var.github_actions_runner_controller_enabled

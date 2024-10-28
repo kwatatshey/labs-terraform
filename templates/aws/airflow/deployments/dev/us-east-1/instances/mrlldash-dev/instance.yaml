@@ -1,0 +1,11 @@
+params:
+  instance-name: mrlldash
+  web-instance-name: MRL LDASH DEV instance
+  repository-name: https://github.com/merck-gen/mrl-mrlldash-dbt-airflow.git
+  repository-branch: develop
+groups:
+  type: Security
+  mapping:
+    MRLLDASH-airflow-dev-admin-role: msd_op_dev
+    MRLLDASH-airflow-dev-developer-role: msd_user_dev
+    MRLLDASH-airflow-dev-analyst-role: msd_viewer_dev

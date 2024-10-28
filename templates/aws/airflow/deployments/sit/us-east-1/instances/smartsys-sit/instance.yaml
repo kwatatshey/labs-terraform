@@ -1,0 +1,14 @@
+params:
+  instance-name: smartsys
+  web-instance-name: SMARTSYS SIT instance
+  repository-name: https://github.com/merck-gen/mrl-mrlsmart-dbt-airflow.git
+  repository-branch: test
+groups:
+  type: Security
+  mapping:
+    SMARTSYS-airflow-test-admin-role: msd_op_prod
+    SMARTSYS-airflow-test-developer-role: msd_user_prod
+    SMARTSYS-airflow-test-analyst-role: msd_viewer_prod
+size:
+  dags_count: 15
+  concurent_tasks: 10

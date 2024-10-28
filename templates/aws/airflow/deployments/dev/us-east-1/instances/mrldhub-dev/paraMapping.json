@@ -1,0 +1,14 @@
+{
+  "instance": {
+    "<instance-name>": "mrldhub",
+    "<web-instance-name>": "MRLDHUB DEV instance",
+    "<repository-name>": "https://github.com/merck-gen/mrl-mrldhub-dbt-airflow",
+    "<repository-branch>": "develop"
+  },  
+  "groups": {
+    "<group-type>": "Security",
+    "<msd-op-group>": "MRLDHUB-airflow-dev-admin-role",
+    "<msd-viewer-group>": "MRLDHUB-airflow-dev-analyst-role",
+    "<msd-user-group>": "MRLDHUB-airflow-dev-developer-role"
+  }
+}

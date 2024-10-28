@@ -1,0 +1,12 @@
+params:
+  instance-name: mrldhub
+  web-instance-name: MRLDHUB SIT instance
+  repository-name: https://github.com/merck-gen/mrl-mrldhub-dbt-airflow 
+  repository-branch: test
+groups:
+  type: Security
+  mapping:
+    MRLDHUB-airflow-dev-admin-role: msd_op_dev
+    MRLDHUB-airflow-dev-developer-role: msd_user_dev
+    MRLDHUB-airflow-dev-analyst-role: msd_viewer_dev
+    

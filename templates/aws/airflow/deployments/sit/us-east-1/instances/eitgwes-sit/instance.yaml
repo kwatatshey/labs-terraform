@@ -1,0 +1,12 @@
+params:
+  instance-name: eitgwes
+  web-instance-name: EITGWES SIT instance
+  repository-name: https://github.com/merck-gen/gwesdl-aws-datalake
+  repository-branch: airflow-sit
+groups:
+  type: Security
+  mapping:
+    GWESDL-airflow-sit-admin-role: msd_op_dev
+    GWESDL-airflow-sit-developer-role: msd_user_dev
+    GWESDL-airflow-sit-analyst-role: msd_viewer_dev
+    

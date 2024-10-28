@@ -1,0 +1,14 @@
+params:
+  instance-name: hhiela
+  web-instance-name: HHIELA PROD instance
+  repository-name: https://github.com/merck-gen/hhie-module-airflow-latam.git
+  repository-branch: prd
+groups:
+  type: Security
+  mapping:
+    hhiela-airflow-prd-op: msd_op_prod
+    hhiela-airflow-prd-user: msd_user_prod
+    hhiela-airflow-prd-viewer: msd_viewer_prod
+size:
+  dags_count: 1000
+  concurent_tasks: 180

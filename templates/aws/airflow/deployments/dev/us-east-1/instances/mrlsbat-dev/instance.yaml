@@ -1,0 +1,12 @@
+params:
+  instance-name: mrlsbat
+  web-instance-name: MRLSBAT DEV instance
+  repository-name: https://github.com/merck-gen/crweg-tdm-sbatui-airflow.git
+  repository-branch: dev
+groups:
+  type: Security
+  mapping:
+    sbat-airfl-op-dev: msd_op_dev
+size:
+  dags_count: 50
+  concurent_tasks: 12

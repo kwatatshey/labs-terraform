@@ -1,0 +1,14 @@
+params:
+  instance-name: mmdgse
+  web-instance-name: MMDGSE PROD instance
+  repository-name: https://github.com/merck-gen/gse-analytics.git
+  repository-branch: airflow-prod
+groups:
+  type: Security
+  mapping:
+    GSEPRD-ADMIN-ROLE: msd_op_prod
+    GSEPRD-DVLPR-ROLE: msd_user_prod
+    GSEPRD-ANLYS-ROLE: msd_viewer_prod
+size:
+  dags_count: 50
+  concurent_tasks: 48

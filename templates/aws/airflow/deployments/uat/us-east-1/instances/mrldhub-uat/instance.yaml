@@ -1,0 +1,12 @@
+params:
+  instance-name: mrldhub
+  web-instance-name: MRLDHUB UAT instance
+  repository-name: https://github.com/merck-gen/mrl-mrldhub-dbt-airflow.git
+  repository-branch: uat
+groups:
+  type: Security
+  mapping:
+    MRLDHUB-airflow-uat-admin-role: msd_op_uat
+    MRLDHUB-airflow-uat-developer-role: msd_user_uat
+    MRLDHUB-airflow-uat-analyst-role: msd_viewer_uat
+    

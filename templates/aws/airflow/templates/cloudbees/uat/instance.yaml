@@ -1,0 +1,19 @@
+params:
+  instance-name: <instance-name>
+  web-instance-name: <INSTANCE-NAME> UAT instance
+  repository-name: <repository-name>
+  repository-branch: <repository-branch>
+  project-ci: <project-ci>
+  requester: <requester>
+  main-contact: <contact@email>
+  team: <team>
+  jira-key: <jira-ticket>
+groups:
+  type: Security
+  mapping:
+    <admin-role>: msd_op_uat
+    <developer-role>: msd_user_uat
+    <analyst-role>: msd_viewer_uat
+size:
+  dags_count: <dags-number>
+  concurent_tasks: <tasks-number>

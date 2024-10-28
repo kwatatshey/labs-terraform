@@ -1,0 +1,10 @@
+params:
+  instance-name: ctocaeoathree
+  web-instance-name: CTOCAEOATHREE DEV instance
+  repository-name: https://github.com/merck-gen/dicp-caeo-dag.git
+  repository-branch: qa
+groups:
+  type: Security
+  mapping:
+    cd_aparflow_developers: msd_op_dev
+    

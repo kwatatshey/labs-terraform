@@ -1,0 +1,13 @@
+params:
+  instance-name: mrlrwdex
+  web-instance-name: MRLRWDEX PROD instance
+  repository-name: https://github.com/merck-gen/rwdex-di-airflow.git
+  repository-branch: prod
+groups:
+  type: Security
+  mapping:
+    rwdex-prod-admins: msd_op_prod
+    rwdex-prod-users: msd_user_prod
+size:
+  dags_count: 10
+  concurent_tasks: 15

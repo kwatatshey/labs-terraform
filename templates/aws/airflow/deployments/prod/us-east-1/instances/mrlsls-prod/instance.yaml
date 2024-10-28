@@ -1,0 +1,12 @@
+params:
+  instance-name: mrlsls
+  web-instance-name: MRLSLS PROD instance
+  repository-name: https://github.com/merck-gen/crweg-tdcm-sls-airflow.git
+  repository-branch: prod
+groups:
+  type: Security
+  mapping:
+    sls-airflow-op-prd: msd_op_prod
+size:
+  dags_count: 60
+  concurent_tasks: 48

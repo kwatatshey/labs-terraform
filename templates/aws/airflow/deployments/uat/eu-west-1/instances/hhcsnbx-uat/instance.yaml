@@ -1,0 +1,12 @@
+params:
+  instance-name: hhcsnbx
+  web-instance-name: HHCSNBX UAT instance
+  repository-name: https://github.com/merck-gen/cec-nbex-lyriko-dags
+  repository-branch: UAT
+groups:
+  type: Exchange Distribution List
+  mapping:
+    cs_nbx_admins: msd_op_uat
+    cs_nbx_devs: msd_user_uat
+    cs_nbx_ro: msd_viewer_uat
+    

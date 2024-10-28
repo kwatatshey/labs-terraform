@@ -1,5 +1,9 @@
+# terraform {
+#   source = "${get_repo_root()}/templates/aws/vpc-alls"
+# }
+
 terraform {
-  source = "${get_repo_root()}/templates/aws/vpc-alls"
+  source = "git::git@github.com:kwatatshey/labs-terraform-modules.git//templates/aws/vpc_alls"
 }
 
 # For Inputs

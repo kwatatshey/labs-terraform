@@ -1,0 +1,14 @@
+{
+  "instance": {
+    "<instance-name>": "mrlldash",
+    "<web-instance-name>": "MRL LDASH DEV instance",
+    "<repository-name>": "https://github.com/merck-gen/mrl-mrlldash-dbt-airflow.git",
+    "<repository-branch>": "develop"
+  },  
+  "groups": {
+    "<group-type>": "Security",
+    "<msd-op-group>": "MRLLDASH-airflow-dev-admin-role",
+    "<msd-viewer-group>": "MRLLDASH-airflow-dev-analyst-role",
+    "<msd-user-group>": "MRLLDASH-airflow-dev-developer-role"
+  }
+}

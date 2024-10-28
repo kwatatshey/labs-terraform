@@ -1,0 +1,15 @@
+params:
+  instance-name: hhieap
+  web-instance-name: HHIEAP SIT instance
+  repository-name: https://github.com/merck-gen/hhie-module-airflow-ap.git
+  repository-branch: tst
+groups:
+  type: Security
+  mapping:
+    hhieap-airflow-tst-op: msd_op_sit
+    hhieap-airflow-tst-user: msd_user_sit
+    hhieap-airflow-tst-viewer: msd_viewer_sit
+size:
+  dags_count: 3500
+  concurent_tasks: 1000
+    

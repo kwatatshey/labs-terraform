@@ -1,0 +1,14 @@
+params:
+  instance-name: gomfirefly
+  web-instance-name: GOMFIREFLY DEV instance
+  repository-name: https://github.com/merck-gen/fir-firefly-airflow-dev
+  repository-branch: master
+groups:
+  type: Security
+  mapping:
+    AWS-821755030551-firefly-airflow-dev-role: msd_op_dev
+    AWS-821755030551-firefly-airflow-dev-dev-role: msd_user_dev
+    AWS-821755030551-firefly-airflow-anl-dev-role: msd_viewer_dev
+size:
+  dags_count: 40
+  concurent_tasks: 18

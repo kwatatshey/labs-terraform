@@ -1,0 +1,12 @@
+params:
+  instance-name: hhiegf
+  web-instance-name: HHIEGF PROD instance
+  repository-name: https://github.com/merck-gen/hhie-module-airflow-gf.git
+  repository-branch: prd
+groups:
+  type: Security
+  mapping:
+    hhiegf-airflow-prd-op: msd_op_prod
+    hhiegf-airflow-prd-user: msd_user_prod
+    ghhiegf-airflow-prd-viewer: msd_viewer_prod
+    

@@ -1,0 +1,14 @@
+params:
+  instance-name: mrltcad
+  web-instance-name: MRLTCAD sit instance
+  repository-name: https://github.com/merck-gen/mrl-tnsm-tcad-airflow.git
+  repository-branch: sit
+groups:
+  type: Security
+  mapping:
+    mrltcad-airflow-tst-admin-role: msd_op_sit
+    mrltcad-airflow-tst-developer-role: msd_user_sit
+    mrltcad-airflow-tst-analyst-role: msd_viewer_sit
+size:
+  dags_count: 100
+  concurent_tasks: 96

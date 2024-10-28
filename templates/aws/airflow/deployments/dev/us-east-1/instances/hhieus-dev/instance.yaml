@@ -1,0 +1,12 @@
+params:
+  instance-name: hhieus
+  web-instance-name: HHIEUS DEV instance
+  repository-name: https://github.com/merck-gen/hhie-module-airflow-us
+  repository-branch: dev
+groups:
+  type: Security
+  mapping:
+    hhieus-airflow-dev-op: msd_op_dev
+    hhieus-airflow-dev-user: msd_user_dev
+    hhieus-airflow-dev-viewer: msd_viewer_dev
+    

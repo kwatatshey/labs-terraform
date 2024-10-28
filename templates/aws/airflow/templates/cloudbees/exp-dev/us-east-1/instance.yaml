@@ -1,0 +1,16 @@
+params:
+  instance-name: insert-instance
+  web-instance-name: INSERT DEV instance
+  repository-name: insert-repo
+  repository-branch: insert-branch
+groups:
+  type: Security
+  mapping:
+    insert-admin-role: msd_op_dev
+    insert-developer-role: msd_user_dev
+    insert-analyst-role: msd_viewer_dev
+size:
+  dags_count: insert-dags-number
+  concurent_tasks: insert-tasks-number
+switches:
+  tf_template_string: exp-dev

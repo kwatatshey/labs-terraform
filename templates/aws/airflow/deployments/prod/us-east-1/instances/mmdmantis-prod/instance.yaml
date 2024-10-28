@@ -1,0 +1,20 @@
+params:
+  instance-name: mmdmantis
+  web-instance-name: MMDMANTIS PROD instance
+  repository-name: https://github.com/merck-gen/mang-airflow-eks-prd
+  repository-branch: develop
+  project-ci: mantises
+  requester: Panchalingam, Dev Anand
+  main-contact: devanand.panchalingam@merck.com
+  team: Mantis
+  jira-key: EEA-756
+groups:
+  type: Security
+  mapping:
+    mmdprd-airflow-op-role: msd_op_prod
+    mmdprd-airflow-viewer-role: msd_viewer_prod
+size:
+  dags_count: 600
+  concurent_tasks: 540
+switches:
+  is_force_flux_file_replacement: false

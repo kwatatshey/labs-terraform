@@ -1,0 +1,18 @@
+params:
+  instance-name: mmdgse
+  web-instance-name: MMDGSE DEV instance
+  repository-name: https://github.com/merck-gen/gse-analytics.git
+  repository-branch: airflow-dev
+groups:
+  type: Security
+  mapping:
+    gse-airflow-op-dev: msd_op_dev
+    gse-airflow-user-dev: msd_user_dev
+    gse-airflow-viewer-dev: msd_viewer_dev
+    GSEDEV-DVLPR-ROLE: msd_op_dev
+    GSEDEV-ADMIN-ROLE: msd_op_dev
+    GSEDEV-ANLYS-ROLE: msd_viewer_dev
+size:
+  dags_count: 50
+  concurent_tasks: 18
+    

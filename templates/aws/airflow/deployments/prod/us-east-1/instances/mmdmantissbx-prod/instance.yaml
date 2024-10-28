@@ -1,0 +1,18 @@
+params:
+  instance-name: mmdmantissbx
+  web-instance-name: MMDMANTISSBX PROD instance
+  repository-name: https://github.com/merck-gen/mang-airflow-eks-sbx
+  repository-branch: develop
+  project-ci: mantises
+  requester: Panchalingam Dev Anand
+  main-contact: devanand.panchalingam@merck.com
+  team: Mantis
+  jira-key: EEA-788
+groups:
+  type: Security
+  mapping:
+    mmdsbx-admin-role: msd_op_prod
+    mmdsbx-analyst-role: msd_viewer_prod
+size:
+  dags_count: 330
+  concurent_tasks: 330

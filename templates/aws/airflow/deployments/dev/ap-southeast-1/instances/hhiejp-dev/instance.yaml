@@ -1,0 +1,14 @@
+params:
+  instance-name: hhiejp
+  web-instance-name: HHIEJP DEV instance
+  repository-name: https://github.com/merck-gen/hhie-module-airflow-jp
+  repository-branch: dev
+groups:
+  type: Security
+  mapping:
+    hhiejp-airflow-dev-op: msd_op_dev
+    hhiejp-airflow-dev-user: msd_user_dev
+    hhiejp-airflow-dev-viewer: msd_viewer_dev
+size:
+  dags_count: 1500
+  concurent_tasks: 500

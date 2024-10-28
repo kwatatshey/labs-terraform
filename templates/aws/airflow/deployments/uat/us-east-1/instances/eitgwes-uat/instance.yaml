@@ -1,0 +1,12 @@
+params:
+  instance-name: eitgwes
+  web-instance-name: EITGWES UAT instance
+  repository-name: https://github.com/merck-gen/gwesdl-aws-datalake
+  repository-branch: airflow-uat
+groups:
+  type: Security
+  mapping:
+    GWESDL-airflow-uat-admin-role: msd_op_uat
+    GWESDL-airflow-uat-developer-role: msd_user_uat
+    GWESDL-airflow-uat-analyst-role: msd_viewer_uat
+    

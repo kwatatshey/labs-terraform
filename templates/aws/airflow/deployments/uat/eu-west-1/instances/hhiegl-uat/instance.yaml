@@ -1,0 +1,11 @@
+params:
+  instance-name: hhiegl
+  web-instance-name: HHIEGL UAT instance
+  repository-name: https://github.com/merck-gen/hhie-module-airflow-gl.git
+  repository-branch: uat
+groups:
+  type: Security
+  mapping:
+    hhiegl-airflow-uat-op: msd_op_sit
+    hhiegl-airflow-uat-user: msd_user_sit
+    hhiegl-airflow-uat-viewer: msd_viewer_sit     

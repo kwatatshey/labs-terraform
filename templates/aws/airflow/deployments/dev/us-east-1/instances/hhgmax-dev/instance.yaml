@@ -1,0 +1,13 @@
+params:
+  instance-name: hhgmax
+  web-instance-name: HHGMAX DEV instance
+  repository-name: https://github.com/merck-gen/gmaxit-airflow.git
+  repository-branch: dev
+groups:
+  type: Security
+  mapping:
+    airflow-gmax-dev-admin-role: msd_op_dev
+    airflow-gmax-gtn-dev-developer-role: msd_op_dev
+size:
+  dags_count: 300
+  concurent_tasks: 70

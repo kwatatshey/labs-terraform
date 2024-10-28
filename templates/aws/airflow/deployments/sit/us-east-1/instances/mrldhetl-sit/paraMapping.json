@@ -1,0 +1,14 @@
+{
+  "instance": {
+    "<instance-name>": "mrldhetl",
+    "<web-instance-name>": "MRLDHETL SIT instance",
+    "<repository-name>": "https://github.com/merck-gen/mrl-mrldhetl-airflow.git",
+    "<repository-branch>": "sit"
+  },  
+  "groups": {
+    "<group-type>": "Security",
+    "<msd-op-group>": "MRLDHETL-airflow-sit-admin-role",
+    "<msd-viewer-group>": "MRLDHETL-airflow-sit-analyst-role",
+    "<msd-user-group>": "MRLDHETL-airflow-sit-developer-role"
+  }
+}

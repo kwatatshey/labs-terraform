@@ -1,0 +1,11 @@
+params:
+  instance-name: gomfirefly
+  web-instance-name: GOM FireFly SIT instance
+  repository-name: ""
+  repository-branch: ""
+groups:
+  type: Security
+  mapping:
+    INSERT: msd_op_sit
+    INSERT: msd_user_sit
+    INSERT: msd_viewer_sit

@@ -1,8 +1,16 @@
 resource "kubernetes_namespace" "namespace" {
-  #count = !contains(data.kubernetes_all_namespaces.allns.namespaces, var.namespace) ? 1 : 0
+  # count = !contains(data.kubernetes_all_namespaces.allns.namespaces, var.namespace) ? 1 : 0
 
   metadata {
     name = var.namespace
+  }
+}
+
+resource "kubernetes_namespace" "argo-workflows-namespace" {
+  # count = !contains(data.kubernetes_all_namespaces.allns.namespaces, var.namespace) ? 1 : 0
+
+  metadata {
+    name = var.argo_workflows_namespace
   }
 }
 
@@ -22,7 +30,7 @@ resource "helm_release" "argocd" {
   ]
 
   depends_on = [
-    kubernetes_namespace.namespace
+    kubernetes_namespace.namespace, kubernetes_namespace.argo-workflows-namespace
   ]
 
   lifecycle {
@@ -103,7 +111,7 @@ module "github_sso_argocd" {
   cluster_secret_store_ref_name = var.cluster_secret_store_ref_name
 
   depends_on = [
-    kubernetes_namespace.namespace
+    kubernetes_namespace.namespace, kubernetes_namespace.argo-workflows-namespace
   ]
 }
 
@@ -117,7 +125,7 @@ module "github_sso_argo_workflows" {
   cluster_secret_store_ref_name = var.cluster_secret_store_ref_name
 
   depends_on = [
-    kubernetes_namespace.namespace
+    kubernetes_namespace.namespace, kubernetes_namespace.argo-workflows-namespace
   ]
 }
 
@@ -132,6 +140,6 @@ module "slack" {
   slack_poc_enabled             = var.slack_poc_enabled
 
   depends_on = [
-    kubernetes_namespace.namespace
+    kubernetes_namespace.namespace, kubernetes_namespace.argo-workflows-namespace
   ]
 }

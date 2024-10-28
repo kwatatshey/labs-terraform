@@ -1,0 +1,14 @@
+params:
+  instance-name: ctodisbx
+  web-instance-name: CTODISBX DEV instance
+  repository-name: https://github.com/merck-gen/mf-difw-eks-airflow.git
+  repository-branch: airflow-sbx
+groups:
+  type: Security
+  mapping:
+    DIFWSBX-ADMN-ROLE: msd_op_dev
+    DIFWSBX-DEVEL-ROLE: msd_user_dev
+    DIFWSBX-ANLYS-ROLE: msd_viewer_dev
+size:
+  dags_count: 100
+  concurent_tasks: 18

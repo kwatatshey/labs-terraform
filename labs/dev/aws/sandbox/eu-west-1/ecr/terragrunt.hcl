@@ -1,6 +1,11 @@
+# terraform {
+#   source = "${get_repo_root()}/templates/aws/ecr"
+# }
+
 terraform {
-  source = "${get_repo_root()}/templates/aws/ecr"
+  source = "git::git@github.com:kwatatshey/labs-terraform-modules.git//templates/aws/ecr"
 }
+
 
 # For AWS provider & tfstate S3 backand
 include {

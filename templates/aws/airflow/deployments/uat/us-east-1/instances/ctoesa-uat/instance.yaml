@@ -1,0 +1,14 @@
+params:
+  instance-name: ctoesa
+  web-instance-name: CTO ESA UAT instance
+  repository-name: https://github.com/merck-gen/esa-airflow.git
+  repository-branch: uat
+groups:
+  type: Security
+  mapping:
+    ESA_NONPRD_AMS: msd_op_uat
+    ESA_NONPRD_DEV: msd_user_uat
+    ESA_NONPRD_RO: msd_viewer_uat
+size:
+  dags_count: 10
+  concurent_tasks: 12

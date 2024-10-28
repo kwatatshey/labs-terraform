@@ -1,5 +1,9 @@
+# terraform {
+#   source = "${get_repo_root()}/templates/aws/charts/system_charts"
+# }
+
 terraform {
-  source = "${get_repo_root()}/templates/aws/charts/system_charts"
+  source = "git::git@github.com:kwatatshey/labs-terraform-modules.git//templates/aws/charts/system_charts"
 }
 
 # For Inputs
@@ -53,11 +57,11 @@ inputs = {
   karpenter_namespace                    = "kube-system"
            
   # ALB Contorller           
-  alb_controller_enabled                 = true
-  alb_controller_namespace               = "alb-controller"
+  alb_controller_enabled                 = true # if true then kong must be false
+  alb_controller_namespace               = "kube-system"
   
   # Kong
-  kong_enabled                           = true
+  kong_enabled                           = false # if true then alb_controller must be false
   kong_namespace                         = "kong"
            
   # External DNS           

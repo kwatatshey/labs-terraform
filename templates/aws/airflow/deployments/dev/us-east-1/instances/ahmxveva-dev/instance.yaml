@@ -1,0 +1,14 @@
+params:
+  instance-name: ahmxveva
+  web-instance-name: AHMXVEVA DEV instance
+  repository-name: https://github.com/merck-gen/ahmxveva-difw-airflow
+  repository-branch: airflow-dev
+groups:
+  type: Security
+  mapping:
+    ahmxvevadev_airflowusers_develop: msd_op_dev
+    ahmxvevadev_airflowusers_execute: msd_user_dev
+    ahmxvevadev_airflowusers_view: msd_viewer_dev
+size:
+  dags_count: 10
+  concurent_tasks: 15

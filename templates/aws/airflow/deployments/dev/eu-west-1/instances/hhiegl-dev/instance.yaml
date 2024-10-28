@@ -1,0 +1,12 @@
+params:
+  instance-name: hhiegl
+  web-instance-name: HHIEGL DEV instance
+  repository-name: https://github.com/merck-gen/hhie-module-airflow-gl.git
+  repository-branch: dev
+groups:
+  type: Security
+  mapping:
+    hhiegl-airflow-dev-op: msd_op_dev
+    hhiegl-airflow-dev-user: msd_user_dev
+    hhiegl-airflow-dev-viewer: msd_viewer_dev
+    

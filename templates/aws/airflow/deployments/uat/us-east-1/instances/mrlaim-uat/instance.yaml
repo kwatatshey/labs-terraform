@@ -1,0 +1,12 @@
+params:
+  instance-name: mrlaim
+  web-instance-name: MRLAIM UAT instance
+  repository-name: https://github.com/merck-gen/mrl-mrlaims-dbt-airflow.git
+  repository-branch: airflow-uat
+groups:
+  type: Security
+  mapping:
+    MRLAIM-airflow-eks-uat-admin-role-Member: msd_op_uat
+    MRLAIM-airflow-eks-uat-developer-role-Member: msd_user_uat
+    MRLAIM-airflow-eks-uat-analyst-role-Member: msd_viewer_uat
+    
