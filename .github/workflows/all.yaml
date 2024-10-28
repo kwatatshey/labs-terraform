@@ -51,7 +51,6 @@ jobs:
 #         echo "matrix={\"folder\":[\".\"]}" >> $GITHUB_OUTPUT
 
   deploy_in_sbx_platform:
-    # needs: setup
     runs-on: ubuntu-latest
     environment: dev
     # if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
@@ -59,14 +58,6 @@ jobs:
     defaults:
         run:
           working-directory: ${{ env.WORKING_DIRECTORY }}    
-    # strategy:
-    #   matrix:
-    #     folder: ${{fromJson(needs.setup.outputs.matrix).folder}}
-    # env:
-    #   ENVIRONMENT_NAME: sbx
-    #   ACTIONS_RUNNER_DEBUG: true
-    #   ACTIONS_STEP_DEBUG: true
-    #   AWS_ACCOUNT: ${{ vars.AWS_ACCOUNT }}
 
     steps:
       - name: Setup Node.js environment
@@ -104,17 +95,12 @@ jobs:
           chmod +x kubectl
           sudo mv kubectl /usr/local/bin/
 
-    #   - name: Install Kubectl
-    #     uses: actions-hub/kubectl@master
-    #     env:
-    #         KUBE_CONFIG_PATH: ./kubeconfig
+      - name: Set KUBE_CONFIG_PATH environment variable
+        run: echo "KUBE_CONFIG_PATH=./kubeconfig" >> $GITHUB_ENV
 
       - name: Update Kubeconfig
         run: |
           aws eks update-kubeconfig --region ${{ env.PROVISIONER_REGION }} --name dbtfDnA-cluster-sbx --kubeconfig ${{ env.KUBE_CONFIG_PATH }}
-
-      - name: Set KUBE_CONFIG_PATH environment variable
-        run: echo "KUBE_CONFIG_PATH=./kubeconfig" >> $GITHUB_ENV
 
       - name: Kubectl config use-context
         run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config use-context arn:aws:eks:${{ env.PROVISIONER_REGION }}:${{ env.DEPLOY_ACCOUNT }}:cluster/dbtfDnA-cluster-sbx
