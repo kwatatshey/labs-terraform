@@ -98,18 +98,18 @@ jobs:
       - name: Set KUBE_CONFIG_PATH environment variable
         run: echo "KUBE_CONFIG_PATH=./kubeconfig" >> $GITHUB_ENV
 
-      - name: Update Kubeconfig
-        run: |
-          aws eks update-kubeconfig --region ${{ env.PROVISIONER_REGION }} --name dbtfDnA-cluster-sbx --kubeconfig ${{ env.KUBE_CONFIG_PATH }}
+    #   - name: Update Kubeconfig
+    #     run: |
+    #       aws eks update-kubeconfig --region ${{ env.PROVISIONER_REGION }} --name dbtfDnA-cluster-sbx --kubeconfig ${{ env.KUBE_CONFIG_PATH }}
 
-      - name: Kubectl config use-context
-        run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config use-context arn:aws:eks:${{ env.PROVISIONER_REGION }}:${{ env.DEPLOY_ACCOUNT }}:cluster/dbtfDnA-cluster-sbx
+    #   - name: Kubectl config use-context
+    #     run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config use-context arn:aws:eks:${{ env.PROVISIONER_REGION }}:${{ env.DEPLOY_ACCOUNT }}:cluster/dbtfDnA-cluster-sbx
 
-      - name: Print current context
-        run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config current-context
+    #   - name: Print current context
+    #     run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config current-context
 
-      - name: Print current user
-        run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config view --minify -o jsonpath='{.users[0].user}'
+    #   - name: Print current user
+    #     run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config view --minify -o jsonpath='{.users[0].user}'
 
       - name: Terraform Init
         id : tf-init
