@@ -38,7 +38,6 @@ Thumbs.db
 *.swo
 
 # Terraform files
-
 .terraform/
 terraform-log*
 *.tfplan
