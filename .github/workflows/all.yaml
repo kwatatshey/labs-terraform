@@ -98,23 +98,23 @@ jobs:
       - name: STS Get Caller Identity After OIDC
         run: aws sts get-caller-identity
 
-    #   - name: Install Kubectl
-    #     run: |
-    #       curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-    #       chmod +x kubectl
-    #       sudo mv kubectl /usr/local/bin/
-
       - name: Install Kubectl
-        uses: actions-hub/kubectl@master
-        env:
-            KUBE_CONFIG_PATH: ./kubeconfig
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/
+
+    #   - name: Install Kubectl
+    #     uses: actions-hub/kubectl@master
+    #     env:
+    #         KUBE_CONFIG_PATH: ./kubeconfig
 
       - name: Update Kubeconfig
         run: |
           aws eks update-kubeconfig --region ${{ env.PROVISIONER_REGION }} --name dbtfDnA-cluster-sbx --kubeconfig ${{ env.KUBE_CONFIG_PATH }}
 
-    #   - name: Set KUBE_CONFIG_PATH environment variable
-    #     run: echo "KUBE_CONFIG_PATH=./kubeconfig" >> $GITHUB_ENV
+      - name: Set KUBE_CONFIG_PATH environment variable
+        run: echo "KUBE_CONFIG_PATH=./kubeconfig" >> $GITHUB_ENV
 
       - name: Kubectl config use-context
         run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config use-context arn:aws:eks:${{ env.PROVISIONER_REGION }}:${{ env.DEPLOY_ACCOUNT }}:cluster/dbtfDnA-cluster-sbx
