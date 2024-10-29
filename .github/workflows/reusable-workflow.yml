@@ -94,12 +94,6 @@ jobs:
         id: install-aws-cli
         uses: unfor19/install-aws-cli-action@v1
 
-      - name: Create Plugin Cache Directory
-        run: mkdir -p $HOME/.terraform.d/plugin-cache
-
-      - name: Set Terraform plugin cache directory
-        run: echo "TF_PLUGIN_CACHE_DIR=$HOME/.terraform.d/plugin-cache" >> $GITHUB_ENV
-
       - name: Setup Terraform
         id: setup-terraform
         uses: hashicorp/setup-terraform@v3
@@ -121,10 +115,6 @@ jobs:
         run: |
           tfenv install ${{ env.TF_ENV_VERSION }}
           tfenv use ${{ env.TF_ENV_VERSION }}
-
-      - name: Verify Terraform Version
-        id: verify-terraform-version
-        run: terraform --version
 
       - name: Install Terragrunt
         id: install-terragrunt
