@@ -285,6 +285,8 @@ jobs:
             git add tree.txt
             git commit -m "Update full directory structure [skip ci]" || echo "No changes to commit"
             git push
+          SSH_AUTH_SOCK: "/github/workflow/ssh-agent.sock"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Terragrunt Validate
         id: terragrunt-validate
@@ -297,6 +299,8 @@ jobs:
         env:
           TF_VAR_github_username: ${{ secrets.GIT_USERNAME }}
           TF_VAR_github_token: ${{ secrets.GIT_TOKEN }}
+          SSH_AUTH_SOCK: "/github/workflow/ssh-agent.sock"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
       - name: Terragrunt Plan
         id: terragrunt-plan
@@ -310,3 +314,5 @@ jobs:
           TF_VAR_github_username: ${{ secrets.GIT_USERNAME }}
           TF_VAR_github_token: ${{ secrets.GIT_TOKEN }}
           TF_PLUGIN_CACHE_DIR: /github/workspace/.terraform.d/plugin-cache
+          SSH_AUTH_SOCK: "/github/workflow/ssh-agent.sock"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
