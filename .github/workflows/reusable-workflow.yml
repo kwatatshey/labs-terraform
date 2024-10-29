@@ -1,7 +1,14 @@
 name: Reusable-Workflow
 
-on: workflow_call
-
+on: 
+    workflow_call:
+      inputs:
+        environment_name:
+          description: 'Environment Name'
+          required: true
+          default: 'dev'
+          type: string
+          
 permissions:
   id-token: write
   contents: read
@@ -20,6 +27,7 @@ env:
 jobs:
   reusable-workflow:
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment_name }}
     defaults:
       run:
         working-directory: ${{ env.WORKING_DIRECTORY }}
