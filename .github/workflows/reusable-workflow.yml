@@ -81,29 +81,38 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set Up SSH For Git
-        id : setup-ssh
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-          eval "$(ssh-agent -s)"
-          ssh-add ~/.ssh/id_rsa
-          ssh-add -l 
-        env:
-          SSH_AUTH_SOCK: /home/runner/work/_temp/_github_workflow/ssh-agent.sock
+      # - name: Set Up SSH For Git
+      #   id : setup-ssh
+      #   run: |
+      #     mkdir -p ~/.ssh
+      #     echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+      #     chmod 600 ~/.ssh/id_rsa
+      #     ssh-keyscan github.com >> ~/.ssh/known_hosts
+      #     eval "$(ssh-agent -s)"
+      #     ssh-add ~/.ssh/id_rsa
+      #     ssh-add -l 
+      #   env:
+      #     SSH_AUTH_SOCK: /home/runner/work/_temp/_github_workflow/ssh-agent.sock
 
-      - name: Clone Repository with Verbose Logging
-        run: |
-          GIT_SSH_COMMAND="ssh -v" git clone git@github.com:kwatatshey/labs-terraform-modules.git
+      - name: create directory to pass ssh-agent socket
+        run: "mkdir -p /home/runner/work/_temp/_github_workflow"
+        shell: bash
+
+      - uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh-auth-sock: "/home/runner/work/_temp/_github_workflow/ssh-agent.sock"
+
+      # - name: Clone Repository with Verbose Logging
+      #   run: |
+      #     GIT_SSH_COMMAND="ssh -v" git clone git@github.com:kwatatshey/labs-terraform-modules.git
           
-      - name: Test Git Access
-        run: git ls-remote git@github.com:kwatatshey/labs-terraform-modules.git          
+      # - name: Test Git Access
+      #   run: git ls-remote git@github.com:kwatatshey/labs-terraform-modules.git          
 
-      - name: Test SSH Connection
-        continue-on-error: true
-        run: ssh -T git@github.com || true 
+      # - name: Test SSH Connection
+      #   continue-on-error: true
+      #   run: ssh -T git@github.com || true 
 
       - name: Install AWS CLI
         id: install-aws-cli
@@ -287,7 +296,7 @@ jobs:
             git add tree.txt
             git commit -m "Update full directory structure [skip ci]" || echo "No changes to commit"
             git push
-          SSH_AUTH_SOCK: /home/runner/work/_temp/_github_workflow/ssh-agent.sock
+          SSH_AUTH_SOCK: "/github/workflow/ssh-agent.sock"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Terragrunt Validate
@@ -301,7 +310,7 @@ jobs:
         env:
           TF_VAR_github_username: ${{ secrets.GIT_USERNAME }}
           TF_VAR_github_token: ${{ secrets.GIT_TOKEN }}
-          SSH_AUTH_SOCK: /home/runner/work/_temp/_github_workflow/ssh-agent.sock
+          SSH_AUTH_SOCK: "/github/workflow/ssh-agent.sock"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
       - name: Terragrunt Plan
@@ -316,5 +325,5 @@ jobs:
           TF_VAR_github_username: ${{ secrets.GIT_USERNAME }}
           TF_VAR_github_token: ${{ secrets.GIT_TOKEN }}
           TF_PLUGIN_CACHE_DIR: /github/workspace/.terraform.d/plugin-cache
-          SSH_AUTH_SOCK: /home/runner/work/_temp/_github_workflow/ssh-agent.sock
+          SSH_AUTH_SOCK: "/github/workflow/ssh-agent.sock"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
