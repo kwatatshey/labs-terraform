@@ -81,19 +81,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      # - name: Set Up SSH For Git
-      #   id : setup-ssh
-      #   run: |
-      #     mkdir -p ~/.ssh
-      #     echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-      #     chmod 600 ~/.ssh/id_rsa
-      #     ssh-keyscan github.com >> ~/.ssh/known_hosts
-      #     eval "$(ssh-agent -s)"
-      #     ssh-add ~/.ssh/id_rsa
-      #     ssh-add -l 
-      #   env:
-      #     SSH_AUTH_SOCK: /home/runner/work/_temp/_github_workflow/ssh-agent.sock
-
       - name: create directory to pass ssh-agent socket
         run: "mkdir -p /home/runner/work/_temp/_github_workflow"
         shell: bash
@@ -102,17 +89,6 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           ssh-auth-sock: "/home/runner/work/_temp/_github_workflow/ssh-agent.sock"
-
-      # - name: Clone Repository with Verbose Logging
-      #   run: |
-      #     GIT_SSH_COMMAND="ssh -v" git clone git@github.com:kwatatshey/labs-terraform-modules.git
-          
-      # - name: Test Git Access
-      #   run: git ls-remote git@github.com:kwatatshey/labs-terraform-modules.git          
-
-      # - name: Test SSH Connection
-      #   continue-on-error: true
-      #   run: ssh -T git@github.com || true 
 
       - name: Install AWS CLI
         id: install-aws-cli
@@ -284,7 +260,6 @@ jobs:
             echo "Generated dependency graph in DOT format."
             terragrunt run-all graph > terragrunt-full-graph.dot
             echo "Generated full Terragrunt graph in DOT format."
-            # git config --global url."https://user:${{secrets.GIT_TOKEN}}@github.com"
             git config --local user.name "github-actions[bot]"
             git config --local user.email "github-actions[bot]@users.noreply.github.com"
             git add terragrunt-dependency-graph.dot terragrunt-full-graph.dot
