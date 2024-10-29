@@ -23,17 +23,17 @@ include "common_providers" {
 }
 
 dependency "eks" {
-  config_path  = "../010_eks"
+  config_path = "../010_eks"
   mock_outputs = {
-    vpc_id              = "vpc-1234"
-    r53_zone_name       = "zone_id"
-    eks_endpoint        = "https://example.com/eks"
-    eks_certificate     = "aGVsbG93b3JsZAo="
-    eks_cluster_name    = "test_cluster"
-    eks_region          = "us-east-1"
-    acm_certificate_arn = "aGVsbG93b3JsZAo="
+    vpc_id                = "vpc-1234"
+    r53_zone_name         = "zone_id"
+    eks_endpoint          = "https://example.com/eks"
+    eks_certificate       = "aGVsbG93b3JsZAo="
+    eks_cluster_name      = "test_cluster"
+    eks_region            = "us-east-1"
+    acm_certificate_arn   = "aGVsbG93b3JsZAo="
     eks_oidc_provider_arn = "arn::test"
-    cluster_autoscaler  = {
+    cluster_autoscaler = {
       enabled        = true
       namespace      = "dummy"
       serviceaccount = "sa"
@@ -79,39 +79,39 @@ dependency "eks" {
       serviceaccount = "sa"
     }
     loki_stack = {
-      enabled                                       = true
-      namespace                                     = "dummy"
-      serviceaccount                                = "sa"
-      ingress_enabled                               = true
-      prometheus_server_volume_size                 = "8Gi"
-      prometheus_alert_manager_volume_size          = "8Gi"
-      loki_volume_size                              = "8Gi"
-      github_oauth_client_id             = "dummy"
-      github_oauth_client_secret         = "dummy"
-      github_oauth_allowed_domains       = []
-      github_oauth_allowed_organizations = []
-      github_oauth_allowed_team_ids      = []
-      github_oauth_enabled               = true
+      enabled                              = true
+      namespace                            = "dummy"
+      serviceaccount                       = "sa"
+      ingress_enabled                      = true
+      prometheus_server_volume_size        = "8Gi"
+      prometheus_alert_manager_volume_size = "8Gi"
+      loki_volume_size                     = "8Gi"
+      github_oauth_client_id               = "dummy"
+      github_oauth_client_secret           = "dummy"
+      github_oauth_allowed_domains         = []
+      github_oauth_allowed_organizations   = []
+      github_oauth_allowed_team_ids        = []
+      github_oauth_enabled                 = true
     }
   }
 }
 
-dependency "system_charts"{
-  config_path = "../020_system_charts"
+dependency "system_charts" {
+  config_path  = "../020_system_charts"
   skip_outputs = true
 }
 
 inputs = {
-  cluster_region                                  = dependency.eks.outputs.eks_region
-  cluster_name                                    = dependency.eks.outputs.eks_cluster_name
-  vpc_id                                          = dependency.eks.outputs.vpc_id
-  domain_name                                     = dependency.eks.outputs.r53_zone_name
-  acm_certificate_arn                             = dependency.eks.outputs.acm_certificate_arn
-  cluster_oidc_provider_arn                       = dependency.eks.outputs.eks_oidc_provider_arn
+  cluster_region            = dependency.eks.outputs.eks_region
+  cluster_name              = dependency.eks.outputs.eks_cluster_name
+  vpc_id                    = dependency.eks.outputs.vpc_id
+  domain_name               = dependency.eks.outputs.r53_zone_name
+  acm_certificate_arn       = dependency.eks.outputs.acm_certificate_arn
+  cluster_oidc_provider_arn = dependency.eks.outputs.eks_oidc_provider_arn
 
   # Kubeshark
-  kubeshark_enabled                               = true
-  kubeshark_namespace                             = "kubeshark"
+  kubeshark_enabled   = true
+  kubeshark_namespace = "kubeshark"
 
   # Loki stack
   loki_stack_enabled                              = true
@@ -121,15 +121,15 @@ inputs = {
   loki_stack_prometheus_server_volume_size        = "20Gi"
   loki_stack_prometheus_alert_manager_volume_size = "5Gi"
   loki_stack_loki_volume_size                     = "20Gi"
-  loki_stack_github_oauth_client_id               =  "${get_env("github_oauth_client_id", "Please provide a github_oauth_client_id")}" // Create an OAuth app in Github and provide the client id
+  loki_stack_github_oauth_client_id               = "${get_env("github_oauth_client_id", "Please provide a github_oauth_client_id")}"         // Create an OAuth app in Github and provide the client id
   loki_stack_github_oauth_client_secret           = "${get_env("github_oauth_client_secret", "Please provide a github_oauth_client_secret")}" // Create an OAuth app in Github and provide the client secret
   # loki_stack_github_oauth_allowed_domains         = ""
   # loki_stack_github_oauth_allowed_organizations   = ""
   # loki_stack_github_oauth_allowed_team_ids        = ""
-  loki_stack_github_oauth_enabled                 = true
+  loki_stack_github_oauth_enabled = true
 
   # Jaeger
-  jaeger_enabled                                  = true
-  jaeger_namespace                                = "jaeger"
-  jaeger_demo_app_enabled                         = true
+  jaeger_enabled          = true
+  jaeger_namespace        = "jaeger"
+  jaeger_demo_app_enabled = true
 }

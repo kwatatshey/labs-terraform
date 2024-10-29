@@ -23,14 +23,14 @@ include "common_providers" {
 }
 
 dependency "eks" {
-  config_path  = "../010_eks"
+  config_path = "../010_eks"
   mock_outputs = {
-    vpc_id              = "vpc-1234"
-    r53_zone_name       = "zone_id"
-    eks_endpoint        = "https://example.com/eks"
-    eks_certificate     = "aGVsbG93b3JsZAo="
-    eks_cluster_name    = "test_cluster"
-    acm_certificate_arn = "aGVsbG93b3JsZAo="
+    vpc_id                = "vpc-1234"
+    r53_zone_name         = "zone_id"
+    eks_endpoint          = "https://example.com/eks"
+    eks_certificate       = "aGVsbG93b3JsZAo="
+    eks_cluster_name      = "test_cluster"
+    acm_certificate_arn   = "aGVsbG93b3JsZAo="
     eks_oidc_provider_arn = "arn::test"
   }
 }
@@ -40,57 +40,57 @@ locals {
 }
 
 inputs = {
-  region                                 = local.my_region
-  cluster_name                           = dependency.eks.outputs.eks_cluster_name
-  cluster_endpoint                       = dependency.eks.outputs.eks_endpoint
-  vpc_id                                 = dependency.eks.outputs.vpc_id
-  domain_name                            = dependency.eks.outputs.r53_zone_name
-  acm_certificate_arn                    = dependency.eks.outputs.acm_certificate_arn
-  cluster_oidc_provider_arn              = dependency.eks.outputs.eks_oidc_provider_arn
-         
+  region                    = local.my_region
+  cluster_name              = dependency.eks.outputs.eks_cluster_name
+  cluster_endpoint          = dependency.eks.outputs.eks_endpoint
+  vpc_id                    = dependency.eks.outputs.vpc_id
+  domain_name               = dependency.eks.outputs.r53_zone_name
+  acm_certificate_arn       = dependency.eks.outputs.acm_certificate_arn
+  cluster_oidc_provider_arn = dependency.eks.outputs.eks_oidc_provider_arn
+
   # Cluster Autoscaler           
-  cluster_autoscaler_enabled             = false
-  cluster_autoscaler_namespace           = "cluster-autoscaler"
+  cluster_autoscaler_enabled   = false
+  cluster_autoscaler_namespace = "cluster-autoscaler"
 
   # Karpenter Autoscaler
-  karpenter_enabled                      = true
-  karpenter_namespace                    = "kube-system"
-           
+  karpenter_enabled   = true
+  karpenter_namespace = "kube-system"
+
   # ALB Contorller           
-  alb_controller_enabled                 = true # if true then kong must be false
-  alb_controller_namespace               = "kube-system"
-  
+  alb_controller_enabled   = true # if true then kong must be false
+  alb_controller_namespace = "kube-system"
+
   # Kong
-  kong_enabled                           = false # if true then alb_controller must be false
-  kong_namespace                         = "kong"
-           
+  kong_enabled   = false # if true then alb_controller must be false
+  kong_namespace = "kong"
+
   # External DNS           
-  eks_external_dns_enabled               = true
-  external_dns_namespace                 = "external-dns"
-  
+  eks_external_dns_enabled = true
+  external_dns_namespace   = "external-dns"
+
   # External S
-  external_secrets_enabled               = true
-  external_secrets_namespace             = "external-secrets"
-  external_secrets_regex                 = "*" # For ARN
+  external_secrets_enabled   = true
+  external_secrets_namespace = "external-secrets"
+  external_secrets_regex     = "*" # For ARN
 
   # EBS CSI Driver
-  ebs_csi_enabled                        = true
-  ebs_csi_driver_namespace               = "kube-system"
+  ebs_csi_enabled          = true
+  ebs_csi_driver_namespace = "kube-system"
 
   # Metrics Server
-  metrics_server_enabled                 = true
-  metrics_server_namespace               = "kube-system"
+  metrics_server_enabled   = true
+  metrics_server_namespace = "kube-system"
 
   # Cert Manager
-  cert_manager_enabled                   = false
-  cert_manager_namespace                 = "cert-manager"
+  cert_manager_enabled   = false
+  cert_manager_namespace = "cert-manager"
 
   # Node Trmination Handler
   aws_node_termination_handler_enabled   = true
   aws_node_termination_handler_namespace = "kube-system"
 
   # Keda
-  keda_enabled                           = false
-  keda_poc_enabled                       = false
-  keda_namespace                         = "keda"
+  keda_enabled     = false
+  keda_poc_enabled = false
+  keda_namespace   = "keda"
 }

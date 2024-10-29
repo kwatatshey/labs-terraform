@@ -23,7 +23,7 @@ include "cloud" {
 # }
 
 dependency "vpc" {
-  config_path  = "../../vpc"
+  config_path = "../../vpc"
   mock_outputs = {
     vpc_id             = "vpc-1234"
     public_subnets     = ["subnet-1", "subnet-2", "subnet-3"]
@@ -34,29 +34,29 @@ dependency "vpc" {
 }
 
 locals {
-  r53_hosted_zone_name = include.root.locals.my_account_conf.locals.r53_hosted_zone_name
-  common_tags          = include.root.locals.my_env_conf.inputs.common_tags
-  kubernets_version    = include.root.locals.my_stack_conf.locals.kubernets_version
-  cluster_name         = read_terragrunt_config(find_in_parent_folders("cluster.hcl")).locals.cluster_name
+  r53_hosted_zone_name         = include.root.locals.my_account_conf.locals.r53_hosted_zone_name
+  common_tags                  = include.root.locals.my_env_conf.inputs.common_tags
+  kubernets_version            = include.root.locals.my_stack_conf.locals.kubernets_version
+  cluster_name                 = read_terragrunt_config(find_in_parent_folders("cluster.hcl")).locals.cluster_name
   worker_nodes_kms_key_aliases = [format("eks/kms/sao/%s/ebs", local.cluster_name)]
 }
 
 inputs = {
-  vpc_id                = dependency.vpc.outputs.vpc_id
-  public_subnet_ids     = dependency.vpc.outputs.public_subnets
-  private_subnet_ids    = dependency.vpc.outputs.private_subnets
-  cluster_name          = local.cluster_name
+  vpc_id                       = dependency.vpc.outputs.vpc_id
+  public_subnet_ids            = dependency.vpc.outputs.public_subnets
+  private_subnet_ids           = dependency.vpc.outputs.private_subnets
+  cluster_name                 = local.cluster_name
   worker_nodes_kms_key_aliases = local.worker_nodes_kms_key_aliases
   # spot_instance_types   = ["t3.medium"]
   # spot_instance_types   = ["m7i.4xlarge", "t3.small", "t3.medium", "t3.large", "t3a.small", "t3a.medium", "t3a.large", "t3.xlarge"]
   # kubernets_version     = "1.30"
-  kubernets_version     = local.kubernets_version
-  r53_hosted_zone_name  = local.r53_hosted_zone_name
-  tags                  = local.common_tags
+  kubernets_version          = local.kubernets_version
+  r53_hosted_zone_name       = local.r53_hosted_zone_name
+  tags                       = local.common_tags
   create_managed_node_groups = true
   # create_node_security_group = true
 
-  node_security_group_tags   = {
+  node_security_group_tags = {
     "kubernetes.io/cluster/${local.cluster_name}" = "owned"
   }
   # additional_policies  = {
@@ -67,7 +67,7 @@ inputs = {
   # create_fargate_profile    = true
 
   # For Node Group
-  nodegroup_subnet_ids = dependency.vpc.outputs.public_subnets
+  nodegroup_subnet_ids    = dependency.vpc.outputs.public_subnets
   autoscaling_average_cpu = 30
   eks_managed_node_groups = {
     "my-app-eks-x86" = {
@@ -111,57 +111,57 @@ inputs = {
     #   }]
     # }
   }
-  iam_node_group_role = "${local.cluster_name}-node-group-role"
+  iam_node_group_role  = "${local.cluster_name}-node-group-role"
   node_add_policy_name = "${local.cluster_name}-node-additional-policy"
   iam_role_nodes_additional_policies = {
-  worker_node_policy                  = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
-  cni_policy                          = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
-  cloudwatch_agent_policy             = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy",
-  ssm_managed_instance_core_policy    = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
-  vpc_resource_controller_policy      = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController",
-  AmazonEC2ContainerServiceforEC2Role = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role",
-  CloudWatchFullAccess                = "arn:aws:iam::aws:policy/CloudWatchFullAccess",
-  CloudWatchLogsFullAccess            = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess",
-  AmazonEC2ContainerServiceforEC2Role = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
+    worker_node_policy                  = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
+    cni_policy                          = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
+    cloudwatch_agent_policy             = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy",
+    ssm_managed_instance_core_policy    = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
+    vpc_resource_controller_policy      = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController",
+    AmazonEC2ContainerServiceforEC2Role = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role",
+    CloudWatchFullAccess                = "arn:aws:iam::aws:policy/CloudWatchFullAccess",
+    CloudWatchLogsFullAccess            = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess",
+    AmazonEC2ContainerServiceforEC2Role = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
   }
 
-  developer_users           = ["Terraform", "tst"]
-  developer_roles           = ["CrossplaneRole"]
-  developer_user_group      = "devepers-user-group"
-  kubernetes_groups         = local.cluster_name
+  developer_users      = ["Terraform", "tst"]
+  developer_roles      = ["CrossplaneRole"]
+  developer_user_group = "devepers-user-group"
+  kubernetes_groups    = local.cluster_name
 
   oic_role_configurations = {
-  aws-load-balancer-controller-argocd = {
-    role_name           = "aws-load-balancer-controller1"
-    assume_role_actions = ["sts:AssumeRoleWithWebIdentity"]
-    service_account     = "aws-load-balancer-controller"
-    namespace           = "good"
-    policy_file         = "aws-load-balancer-controller.json"
+    aws-load-balancer-controller-argocd = {
+      role_name           = "aws-load-balancer-controller1"
+      assume_role_actions = ["sts:AssumeRoleWithWebIdentity"]
+      service_account     = "aws-load-balancer-controller"
+      namespace           = "good"
+      policy_file         = "aws-load-balancer-controller.json"
+    }
+    # aws-load-balancer-controller-kube-system = {
+    #   role_name           = "aws-load-balancer-controller-kube-system"
+    #   assume_role_actions = ["sts:AssumeRoleWithWebIdentity"]
+    #   service_account     = "aws-load-balancer-controller"
+    #   namespace           = "kube-system"
+    #   policy_file         = "aws-load-balancer-controller.json"
+    # }
   }
-  # aws-load-balancer-controller-kube-system = {
-  #   role_name           = "aws-load-balancer-controller-kube-system"
-  #   assume_role_actions = ["sts:AssumeRoleWithWebIdentity"]
-  #   service_account     = "aws-load-balancer-controller"
-  #   namespace           = "kube-system"
-  #   policy_file         = "aws-load-balancer-controller.json"
-  # }
-}
- create_fargate_profile    = true
- fargate_profiles = {
-  "my-app-eks-fargate" = {
-    name          = "demo"
-    namespace     = "demo"
-    iam_role_name = "${local.cluster_name}-fargate-role"
-    selectors = [
-      {
-        namespace = "demo"
-        labels    = {}
+  create_fargate_profile = true
+  fargate_profiles = {
+    "my-app-eks-fargate" = {
+      name          = "demo"
+      namespace     = "demo"
+      iam_role_name = "${local.cluster_name}-fargate-role"
+      selectors = [
+        {
+          namespace = "demo"
+          labels    = {}
+        }
+      ]
+      additional_policies = {
+        "AmazonEKSFargatePodExecutionRolePolicy" = "arn:aws:iam::aws:policy/AmazonEKSFargatePodExecutionRolePolicy"
       }
-    ]
-    additional_policies = {
-      "AmazonEKSFargatePodExecutionRolePolicy" = "arn:aws:iam::aws:policy/AmazonEKSFargatePodExecutionRolePolicy"
     }
   }
-}
 
 }

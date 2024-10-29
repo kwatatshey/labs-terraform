@@ -1,4 +1,4 @@
-locals{
+locals {
   my_cloud   = basename(get_terragrunt_dir())
   my_account = read_terragrunt_config(find_in_parent_folders("account.hcl")).locals.my_account
   my_region  = read_terragrunt_config(find_in_parent_folders("region.hcl")).locals.my_region
@@ -23,10 +23,10 @@ remote_state {
   }
   config = {
     # disable_bucket_update = true
-    bucket = "terraform-sbx-state-${local.my_account}"
-    key     = "${path_relative_to_include()}/terraform.tfstate"
-    region  = "${local.my_region}"
-    encrypt = true
+    bucket         = "terraform-sbx-state-${local.my_account}"
+    key            = "${path_relative_to_include()}/terraform.tfstate"
+    region         = "${local.my_region}"
+    encrypt        = true
     dynamodb_table = "terraform-sbx-state-lock-${local.my_account}"
     # skip_metadata_api_check = true
 
@@ -43,7 +43,7 @@ remote_state {
       "managed-by"          = "terragrunt"
       "data-classification" = "internal"
     }
-    
+
 
   }
 }

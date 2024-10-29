@@ -1,8 +1,8 @@
-locals{
+locals {
   github_org          = read_terragrunt_config(find_in_parent_folders("org.hcl")).locals.github_org
   github_token        = get_env("TF_VAR_github_token", "none")
   github_provider     = strcontains(basename(get_terragrunt_dir()), "engines")
-  kubernetes_provider = (strcontains(basename(get_terragrunt_dir()), "engines") || strcontains(basename(get_terragrunt_dir()), "charts")) 
+  kubernetes_provider = (strcontains(basename(get_terragrunt_dir()), "engines") || strcontains(basename(get_terragrunt_dir()), "charts"))
 }
 
 generate "providers" {
@@ -35,7 +35,7 @@ provider "kubectl" {
   }
 }
 
-%{ if local.kubernetes_provider ~}
+%{if local.kubernetes_provider~}
 provider "kubernetes" {
   host                   = "${dependency.eks.outputs.eks_endpoint}"
   cluster_ca_certificate = "${replace(base64decode(dependency.eks.outputs.eks_certificate), "\n", "\\n")}"
@@ -46,15 +46,15 @@ provider "kubernetes" {
     args        = ["eks", "get-token", "--cluster-name", "${dependency.eks.outputs.eks_cluster_name}"]
   }
 }
-%{ endif ~}
+%{endif~}
 
-%{ if local.github_provider ~}
+%{if local.github_provider~}
 provider "github" {
   owner = "${local.github_org}"
-%{ if local.github_token != "none" ~}
+%{if local.github_token != "none"~}
   token = "${local.github_token}"
-%{ endif ~}
+%{endif~}
 }
-%{ endif ~}
+%{endif~}
   EOF
 }

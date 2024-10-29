@@ -19,7 +19,7 @@ include "cloud" {
 
 locals {
   my_env_conf = read_terragrunt_config(find_in_parent_folders("env.hcl"))
-  common_tags          = include.root.locals.my_env_conf.inputs.common_tags
+  common_tags = include.root.locals.my_env_conf.inputs.common_tags
   my_region   = read_terragrunt_config(find_in_parent_folders("region.hcl")).locals.my_region
   my_stack    = read_terragrunt_config(find_in_parent_folders("stack.hcl")).locals.my_stack
   my_env      = local.my_env_conf.locals.my_env
