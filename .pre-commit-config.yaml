@@ -1,6 +1,5 @@
 # default_stages: [commit, push]
 # files: ^labs/dev/aws/
-
 repos:
   - repo: https://github.com/terraform-docs/terraform-docs
     rev: v0.16.0
