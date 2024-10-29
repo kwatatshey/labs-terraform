@@ -39,6 +39,19 @@ jobs:
       # Call the reusable workflow
       - name: Run Reusable Workflow
         uses: ./.github/workflows/reusable-workflow.yml
+        with:
+          my-input: "Hello, reusable workflow!"
+          environment_name: ${{ github.event.inputs.environment_name }}
+          Organization: "your-org"
+          Repository: "your-repo"
+          devEnv: "development"
+          uatEnv: "uat"
+          prodEnv: "production"
+          devBranch: "develop"
+          uatBranch: "uat"
+          prodBranch: "main"
+          rootFolder: "/path/to/root"
+          
         env:
           SSH_PRIVATE_KEY: ${{ env.SSH_PRIVATE_KEY }}
 
