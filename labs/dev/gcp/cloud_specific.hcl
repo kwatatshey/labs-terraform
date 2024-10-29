@@ -1,6 +1,6 @@
-locals{
+locals {
   account_specific_config = read_terragrunt_config(find_in_parent_folders("account_specific.hcl"))
-  region_specific = read_terragrunt_config(find_in_parent_folders("region_specific.hcl"))
+  region_specific         = read_terragrunt_config(find_in_parent_folders("region_specific.hcl"))
 }
 
 

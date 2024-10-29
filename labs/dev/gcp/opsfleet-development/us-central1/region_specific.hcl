@@ -1,3 +1,3 @@
 locals {
-  region =  reverse(split("/", get_terragrunt_dir()))[0]
+  region = reverse(split("/", get_terragrunt_dir()))[0]
 }
