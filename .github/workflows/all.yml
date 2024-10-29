@@ -34,27 +34,31 @@ env:
 
 jobs:
   reusable-workflow:
-    uses: ./.github/workflows/reusable-workflow.yml
-    with:
-      environment_name: ${{ github.event.inputs.environment_name }}  # Provide the input required by the reusable workflow
-      Organization: "your-org"
-      Repository: "your-repo"
-      devEnv: "development"
-      uatEnv: "uat"
-      prodEnv: "production"
-      devBranch: "develop"
-      uatBranch: "uat"
-      prodBranch: "main"
-      rootFolder: "/path/to/root"
-    secrets:
-      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-  init:
-    needs: [ reusable-workflow ]
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment_name }}
+
+  # init:
+  #   needs: [ reusable-workflow ]
+  #   runs-on: ${{ jobs.reusable-workflow.runs-on }} # Use the same runner as the reusable workflow
+  #   environment: ${{ github.event.inputs.environment_name }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      # - name: Checkout repository
+      #   uses: actions/checkout@v4
+      - name: Call Reusable Workflow
+        uses: ./.github/workflows/reusable-workflow.yml
+        with:
+          environment_name: ${{ github.event.inputs.environment_name }}  # Provide the input required by the reusable workflow
+          Organization: "your-org"
+          Repository: "your-repo"
+          devEnv: "development"
+          uatEnv: "uat"
+          prodEnv: "production"
+          devBranch: "develop"
+          uatBranch: "uat"
+          prodBranch: "main"
+          rootFolder: "/path/to/root"
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Find Cluster Name
         id: find_cluster
@@ -128,114 +132,112 @@ jobs:
             git commit -m "Update full directory structure [skip ci]" || echo "No changes to commit"
             git push
 
-  validate: 
-    needs: [ reusable-workflow, init ]
-    runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment_name }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+  # validate: 
+  #   needs: [ reusable-workflow, init ]
+  #   runs-on: ubuntu-latest
+  #   environment: ${{ github.event.inputs.environment_name }}
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
 
-      - name: Find Cluster Name
-        id: find_cluster
-        run: |
-          CLUSTER_NAME=$(aws eks list-clusters --region ${{ env.PROVISIONER_REGION }} --query "clusters[0]" --output text)
-          if [ -z "$CLUSTER_NAME" ]; then
-            echo "Cluster does not exist"
-            echo "CLUSTER_EXISTS=false" >> $GITHUB_ENV
-          else
-            echo "Cluster exists: $CLUSTER_NAME"
-            echo "CLUSTER_NAME=$CLUSTER_NAME" >> $GITHUB_ENV
-            echo "CLUSTER_EXISTS=true" >> $GITHUB_ENV
-          fi
+  #     - name: Find Cluster Name
+  #       id: find_cluster
+  #       run: |
+  #         CLUSTER_NAME=$(aws eks list-clusters --region ${{ env.PROVISIONER_REGION }} --query "clusters[0]" --output text)
+  #         if [ -z "$CLUSTER_NAME" ]; then
+  #           echo "Cluster does not exist"
+  #           echo "CLUSTER_EXISTS=false" >> $GITHUB_ENV
+  #         else
+  #           echo "Cluster exists: $CLUSTER_NAME"
+  #           echo "CLUSTER_NAME=$CLUSTER_NAME" >> $GITHUB_ENV
+  #           echo "CLUSTER_EXISTS=true" >> $GITHUB_ENV
+  #         fi
 
-      - name: Update Kubeconfig
-        id: update-kubeconfig
-        if: env.CLUSTER_EXISTS == 'true'
-        run: |
-          aws eks update-kubeconfig --region ${{ env.PROVISIONER_REGION }} --name ${{ env.CLUSTER_NAME }} --kubeconfig ${{ env.KUBE_CONFIG_PATH }}
+  #     - name: Update Kubeconfig
+  #       id: update-kubeconfig
+  #       if: env.CLUSTER_EXISTS == 'true'
+  #       run: |
+  #         aws eks update-kubeconfig --region ${{ env.PROVISIONER_REGION }} --name ${{ env.CLUSTER_NAME }} --kubeconfig ${{ env.KUBE_CONFIG_PATH }}
 
-      - name: Kubectl config use-context
-        id: kubectl-config-use-context
-        if: env.CLUSTER_EXISTS == 'true'
-        run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config use-context arn:aws:eks:${{ env.PROVISIONER_REGION }}:${{ env.DEPLOY_ACCOUNT }}:cluster/dbtfDnA-cluster-sbx
+  #     - name: Kubectl config use-context
+  #       id: kubectl-config-use-context
+  #       if: env.CLUSTER_EXISTS == 'true'
+  #       run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config use-context arn:aws:eks:${{ env.PROVISIONER_REGION }}:${{ env.DEPLOY_ACCOUNT }}:cluster/dbtfDnA-cluster-sbx
 
-      - name: Print current context
-        id: print-current-context
-        if: env.CLUSTER_EXISTS == 'true'
-        run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config current-context
+  #     - name: Print current context
+  #       id: print-current-context
+  #       if: env.CLUSTER_EXISTS == 'true'
+  #       run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config current-context
 
-      - name: Print current user
-        id: print-current-user
-        if: env.CLUSTER_EXISTS == 'true'
-        run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config view --minify -o jsonpath='{.users[0].user}'
+  #     - name: Print current user
+  #       id: print-current-user
+  #       if: env.CLUSTER_EXISTS == 'true'
+  #       run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config view --minify -o jsonpath='{.users[0].user}'
 
-      - name: Validate
-        uses: gruntwork-io/terragrunt-action@v2
-        with:
-          tofu_version: ${{ env.TF_ENV_VERSION}}
-          tg_version: ${{ env.TG_ENV_VERSION }}
-          tg_dir: ${{ env.WORKING_DIRECTORY }}
-          tg_command: 'run-all validate'  
-        env:
-          TF_VAR_github_username: ${{ secrets.GIT_USERNAME }}
-          TF_VAR_github_token: ${{ secrets.GIT_TOKEN }}
+  #     - name: Validate
+  #       uses: gruntwork-io/terragrunt-action@v2
+  #       with:
+  #         tofu_version: ${{ env.TF_ENV_VERSION}}
+  #         tg_version: ${{ env.TG_ENV_VERSION }}
+  #         tg_dir: ${{ env.WORKING_DIRECTORY }}
+  #         tg_command: 'run-all validate'  
+  #       env:
+  #         TF_VAR_github_username: ${{ secrets.GIT_USERNAME }}
+  #         TF_VAR_github_token: ${{ secrets.GIT_TOKEN }}
           
-  plan:
-    needs: [ reusable-workflow, init, validate ]
-    runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment_name }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+  # plan:
+  #   needs: [ reusable-workflow, init, validate ]
+  #   runs-on: ubuntu-latest
+  #   environment: ${{ github.event.inputs.environment_name }}
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
 
-      - name: Find Cluster Name 
-        id: find_cluster
-        run: |
-          CLUSTER_NAME=$(aws eks list-clusters --region ${{ env.PROVISIONER_REGION }} --query "clusters[0]" --output text)
-          if [ -z "$CLUSTER_NAME" ]; then
-            echo "Cluster does not exist"
-            echo "CLUSTER_EXISTS=false" >> $GITHUB_ENV
-          else
-            echo "Cluster exists: $CLUSTER_NAME"
-            echo "CLUSTER_NAME=$CLUSTER_NAME" >> $GITHUB_ENV
-            echo "CLUSTER_EXISTS=true" >> $GITHUB_ENV
-          fi
+  #     - name: Find Cluster Name 
+  #       id: find_cluster
+  #       run: |
+  #         CLUSTER_NAME=$(aws eks list-clusters --region ${{ env.PROVISIONER_REGION }} --query "clusters[0]" --output text)
+  #         if [ -z "$CLUSTER_NAME" ]; then
+  #           echo "Cluster does not exist"
+  #           echo "CLUSTER_EXISTS=false" >> $GITHUB_ENV
+  #         else
+  #           echo "Cluster exists: $CLUSTER_NAME"
+  #           echo "CLUSTER_NAME=$CLUSTER_NAME" >> $GITHUB_ENV
+  #           echo "CLUSTER_EXISTS=true" >> $GITHUB_ENV
+  #         fi
 
-      - name: Update Kubeconfig
-        id: update-kubeconfig
-        if: env.CLUSTER_EXISTS == 'true'
-        run: |
-          aws eks update-kubeconfig --region ${{ env.PROVISIONER_REGION }} --name ${{ env.CLUSTER_NAME }} --kubeconfig ${{ env.KUBE_CONFIG_PATH }}
+  #     - name: Update Kubeconfig
+  #       id: update-kubeconfig
+  #       if: env.CLUSTER_EXISTS == 'true'
+  #       run: |
+  #         aws eks update-kubeconfig --region ${{ env.PROVISIONER_REGION }} --name ${{ env.CLUSTER_NAME }} --kubeconfig ${{ env.KUBE_CONFIG_PATH }}
 
-      - name: Kubectl config use-context
-        id: kubectl-config-use-context
-        if: env.CLUSTER_EXISTS == 'true'
-        run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config use-context arn:aws:eks:${{ env.PROVISIONER_REGION }}:${{ env.DEPLOY_ACCOUNT }}:cluster/dbtfDnA-cluster-sbx
+  #     - name: Kubectl config use-context
+  #       id: kubectl-config-use-context
+  #       if: env.CLUSTER_EXISTS == 'true'
+  #       run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config use-context arn:aws:eks:${{ env.PROVISIONER_REGION }}:${{ env.DEPLOY_ACCOUNT }}:cluster/dbtfDnA-cluster-sbx
 
-      - name: Print current context
-        id: print-current-context
-        if: env.CLUSTER_EXISTS == 'true'
-        run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config current-context
+  #     - name: Print current context
+  #       id: print-current-context
+  #       if: env.CLUSTER_EXISTS == 'true'
+  #       run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config current-context
 
-      - name: Print current user
-        id: print-current-user
-        if: env.CLUSTER_EXISTS == 'true'
-        run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config view --minify -o jsonpath='{.users[0].user}'
+  #     - name: Print current user
+  #       id: print-current-user
+  #       if: env.CLUSTER_EXISTS == 'true'
+  #       run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config view --minify -o jsonpath='{.users[0].user}'
 
-      - name: Plan
-        uses: gruntwork-io/terragrunt-action@v2
-        with:
-          tofu_version: ${{ env.TF_ENV_VERSION}}
-          tg_version: ${{ env.TG_ENV_VERSION }}
-          tg_dir: ${{ env.WORKING_DIRECTORY }}
-          tg_command: 'run-all plan'  
-        env:
-          TF_VAR_github_username: ${{ secrets.GIT_USERNAME }}
-          TF_VAR_github_token: ${{ secrets.GIT_TOKEN }}
-          TF_PLUGIN_CACHE_DIR: /github/workspace/.terraform.d/plugin-cache
-
-
+  #     - name: Plan
+  #       uses: gruntwork-io/terragrunt-action@v2
+  #       with:
+  #         tofu_version: ${{ env.TF_ENV_VERSION}}
+  #         tg_version: ${{ env.TG_ENV_VERSION }}
+  #         tg_dir: ${{ env.WORKING_DIRECTORY }}
+  #         tg_command: 'run-all plan'  
+  #       env:
+  #         TF_VAR_github_username: ${{ secrets.GIT_USERNAME }}
+  #         TF_VAR_github_token: ${{ secrets.GIT_TOKEN }}
+  #         TF_PLUGIN_CACHE_DIR: /github/workspace/.terraform.d/plugin-cache
 
 
 
@@ -243,6 +245,8 @@ jobs:
 
 
 
+
+##############################################################################################################################################################################
 
 
 
