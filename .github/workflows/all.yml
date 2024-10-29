@@ -29,14 +29,15 @@ env:
   WORKING_DIRECTORY: ./labs/dev/aws
   PROVISIONER_REGION: ${{ vars.PROVISIONER_REGION }}
   TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform.d/plugin-cache
-
+  ACTIONS_RUNNER_DEBUG: true
+  ACTIONS_STEP_DEBUG: true
 
 jobs:
   reusable-workflow:
     uses: ./.github/workflows/reusable-workflow.yml
     with:
       environment_name: ${{ github.event.inputs.environment_name }}  # Provide the input required by the reusable workflow
-      
+
   init:
     needs: [ reusable-workflow ]
     runs-on: ubuntu-latest

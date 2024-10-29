@@ -22,12 +22,13 @@ env:
   DEPLOYMENT_ROLE_SESSION_NAME: githubactionsession
   TF_ENV_VERSION: 1.9.8
   TG_ENV_VERSION: 0.68.5
-
+  ACTIONS_RUNNER_DEBUG: true
+  ACTIONS_STEP_DEBUG: true
 
 jobs:
   reusable-workflow:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment_name }}
+    environment: dev
     defaults:
       run:
         working-directory: ${{ env.WORKING_DIRECTORY }}
@@ -113,7 +114,7 @@ jobs:
         run: env
         env:
             SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-            
+
       - name: Set up SSH for Git
         run: |
           mkdir -p ~/.ssh
