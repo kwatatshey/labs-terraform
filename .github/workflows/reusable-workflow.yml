@@ -52,7 +52,7 @@ env:
   DEPLOYMENT_ROLE_SESSION_NAME: githubactionsession
   TF_ENV_VERSION: 1.9.8
   TG_ENV_VERSION: 0.68.5
-  TF_OFU_ENV_VERSION: 1.8.4 # To check all available versions, run `curl -s https://api.github.com/repos/opentofu/opentofu/releases | jq '.[].tag_name'`
+  TF_OFU_ENV_VERSION: 1.8.4 # To check all available versions, run `curl -s https://api.github.com/repos/opentofu/opentofu/releases | jq '.[].tag_name'` or check step called "List OpenTofu Releases" below 
   ACTIONS_RUNNER_DEBUG: true
   ACTIONS_STEP_DEBUG: true
 

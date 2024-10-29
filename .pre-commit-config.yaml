@@ -1,0 +1,23 @@
+default_stages: [commit, push]
+files: ^labs/dev/aws/
+
+repos:
+  - repo: https://github.com/terraform-docs/terraform-docs
+    rev: v0.16.0
+    hooks:
+      - id: terraform-docs-go
+        args: ["-c", ".terraform-docs.yaml"]
+  - repo: https://github.com/terraform-docs/terraform-docs
+    rev: v0.16.0
+    hooks:
+      - id: terraform-docs-go
+        args: ["-c", ".terraform-docs.yaml"]
+  - repo: https://github.com/terraform-docs/terraform-docs
+    rev: v0.16.0
+    hooks:
+      - id: terraform-docs-go
+        args: ["-c", ".terraform-docs.yaml"]
+  - repo: https://github.com/gruntwork-io/pre-commit
+    rev: v0.1.22
+    hooks:
+      - id: terragrunt-hclfmt
