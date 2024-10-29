@@ -207,6 +207,7 @@ jobs:
 
       - name: Update Kubeconfig
         id: update-kubeconfig
+        continue-on-error: true
         run: |
           if [ "${{ env.CLUSTER_EXISTS }}" == "true" ]; then
             aws eks update-kubeconfig --region ${{ env.PROVISIONER_REGION }} --name ${{ env.CLUSTER_NAME }} --kubeconfig ${{ env.KUBE_CONFIG_PATH }}
@@ -216,6 +217,7 @@ jobs:
 
       - name: Kubectl Config Use Context
         id: kubectl-config-use-context
+        continue-on-error: true
         run: |
           if [ "${{ env.CLUSTER_EXISTS }}" == "true" ]; then
             kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config use-context arn:aws:eks:${{ env.PROVISIONER_REGION }}:${{ env.DEPLOY_ACCOUNT }}:cluster/${{ env.CLUSTER_NAME }}
@@ -225,6 +227,7 @@ jobs:
   
       - name: Print Current User
         id: print-current-user
+        continue-on-error: true
         run: |
           if [ "${{ env.CLUSTER_EXISTS }}" == "true" ]; then
             kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config view --minify -o jsonpath='{.users[0].user}'
