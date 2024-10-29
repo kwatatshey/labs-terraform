@@ -42,8 +42,8 @@ jobs:
   #   runs-on: ${{ jobs.reusable-workflow.runs-on }} # Use the same runner as the reusable workflow
   #   environment: ${{ github.event.inputs.environment_name }}
     steps:
-      # - name: Checkout repository
-      #   uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Call Reusable Workflow
         uses: ./.github/workflows/reusable-workflow.yml
         with:
