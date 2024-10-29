@@ -106,6 +106,12 @@ jobs:
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/id_rsa
+        shell: bash
+
+      - name: Debug SSH Key
+        run: |
+          cat ~/.ssh/id_rsa
+        shell: bash
 
       - name: Check ENVIRONMENT_NAME
         id: check-environment-name
