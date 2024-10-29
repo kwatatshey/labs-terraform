@@ -94,9 +94,16 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }} 
 
+      - name: Clone Repository with Verbose Logging
+        run: |
+          GIT_SSH_COMMAND="ssh -v" git clone git@github.com:kwatatshey/labs-terraform-modules.git
+          
+      - name: Test Git Access
+        run: git ls-remote git@github.com:kwatatshey/labs-terraform-modules.git          
+
       - name: Test SSH Connection
         run: ssh -T git@github.com
-        
+          
       - name: Install AWS CLI
         id: install-aws-cli
         uses: unfor19/install-aws-cli-action@v1
