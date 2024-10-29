@@ -94,6 +94,12 @@ jobs:
         id: install-aws-cli
         uses: unfor19/install-aws-cli-action@v1
 
+      - name: Create Plugin Cache Directory
+        run: mkdir -p $HOME/.terraform.d/plugin-cache
+
+      - name: Set Terraform plugin cache directory
+        run: echo "TF_PLUGIN_CACHE_DIR=$HOME/.terraform.d/plugin-cache" >> $GITHUB_ENV
+
       - name: Setup Terraform
         id: setup-terraform
         uses: hashicorp/setup-terraform@v3
@@ -184,7 +190,8 @@ jobs:
         id: terragrunt-hcl-format
         uses: gruntwork-io/terragrunt-action@v2
         with:
-            tofu_version: ${{ env.TF_OFU_ENV_VERSION }}
+            # tofu_version: ${{ env.TF_OFU_ENV_VERSION }}
+            tf_version: ${{ env.TF_ENV_VERSION }}
             tg_version: ${{ env.TG_ENV_VERSION }}
             tg_dir: ${{ env.WORKING_DIRECTORY }}
             tg_command: 'hclfmt --terragrunt-check --terragrunt-diff'
@@ -247,7 +254,8 @@ jobs:
         id: terragrunt-init
         uses: gruntwork-io/terragrunt-action@v2
         with:
-          tofu_version: ${{ env.TF_OFU_ENV_VERSION }}
+          # tofu_version: ${{ env.TF_OFU_ENV_VERSION }}
+          tf_version: ${{ env.TF_ENV_VERSION }}
           tg_version: ${{ env.TG_ENV_VERSION }}
           tg_dir: ${{ env.WORKING_DIRECTORY }}
           tg_command: 'run-all init'  
@@ -279,7 +287,8 @@ jobs:
         id: terragrunt-validate
         uses: gruntwork-io/terragrunt-action@v2
         with:
-          tofu_version: ${{ env.TF_OFU_ENV_VERSION }}
+          # tofu_version: ${{ env.TF_OFU_ENV_VERSION }}
+          tf_version: ${{ env.TF_ENV_VERSION }}
           tg_version: ${{ env.TG_ENV_VERSION }}
           tg_dir: ${{ env.WORKING_DIRECTORY }}
           tg_command: 'run-all validate'  
@@ -293,7 +302,8 @@ jobs:
         id: terragrunt-plan
         uses: gruntwork-io/terragrunt-action@v2
         with:
-          tofu_version: ${{ env.TF_OFU_ENV_VERSION }}
+          # tofu_version: ${{ env.TF_OFU_ENV_VERSION }}
+          tf_version: ${{ env.TF_ENV_VERSION }}
           tg_version: ${{ env.TG_ENV_VERSION }}
           tg_dir: ${{ env.WORKING_DIRECTORY }}
           tg_command: 'run-all plan'  
