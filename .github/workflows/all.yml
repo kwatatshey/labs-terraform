@@ -21,17 +21,7 @@ on:
 permissions:
   id-token: write
   contents: read
-
-# env:
-#   TF_IN_AUTOMATION: true
-#   ENVIRONMENT_NAME: ${{ github.event.inputs.environment_name }}
-#   DEBUG: true
-#   WORKING_DIRECTORY: ./labs/dev/aws
-#   PROVISIONER_REGION: ${{ vars.PROVISIONER_REGION }}
-#   TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform.d/plugin-cache
-#   ACTIONS_RUNNER_DEBUG: true
-#   ACTIONS_STEP_DEBUG: true
-
+  
 jobs:
   reusable-workflow:
     uses: ./.github/workflows/reusable-workflow.yml
