@@ -164,7 +164,7 @@ jobs:
 
       - name: Check ENVIRONMENT_NAME
         id: check-environment-name
-        run: echo "Environment Name is $ENVIRONMENT_NAME"
+        run: echo "ENVIRONMENT_NAME=${{ github.event.inputs.environment_name }}"
 
       - name: Configure AWS credentials with OIDC assume role
         id: configure-aws-credentials
