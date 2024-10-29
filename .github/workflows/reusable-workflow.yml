@@ -109,6 +109,11 @@ jobs:
           chmod +x kubectl
           sudo mv kubectl /usr/local/bin/
 
+      - name: Debug Environment Variables
+        run: env
+        env:
+            SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+            
       - name: Set up SSH for Git
         run: |
           mkdir -p ~/.ssh
