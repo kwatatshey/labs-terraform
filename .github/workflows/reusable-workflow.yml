@@ -94,16 +94,18 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }} 
 
-      - name: Clone Repository with Verbose Logging
-        run: |
-          GIT_SSH_COMMAND="ssh -v" git clone git@github.com:kwatatshey/labs-terraform-modules.git
+      # - name: Clone Repository with Verbose Logging
+      #   run: |
+      #     GIT_SSH_COMMAND="ssh -v" git clone git@github.com:kwatatshey/labs-terraform-modules.git
           
-      - name: Test Git Access
-        run: git ls-remote git@github.com:kwatatshey/labs-terraform-modules.git          
+      # - name: Test Git Access
+      #   run: git ls-remote git@github.com:kwatatshey/labs-terraform-modules.git          
 
-      - name: Test SSH Connection
-        run: ssh -T git@github.com
-          
+      - name: Clean Up Terragrunt and Terraform Files
+        run: |
+          rm -f $(find . -type f -name .terraform.lock.hcl)
+          rm -rf $(find . -type d -name .terragrunt-cache)
+                 
       - name: Install AWS CLI
         id: install-aws-cli
         uses: unfor19/install-aws-cli-action@v1
@@ -257,6 +259,11 @@ jobs:
           path: ${{ env.TF_PLUGIN_CACHE_DIR }}
           key: ${{ runner.os }}-terraform-plugin-cache-${{ hashFiles('**/.terraform.lock.hcl') }}
 
+      - name: Clean Up Terragrunt and Terraform Files
+        run: |
+          rm -f $(find . -type f -name .terraform.lock.hcl)
+          rm -rf $(find . -type d -name .terragrunt-cache)
+        
       - name: Terragrunt Init
         id: terragrunt-init
         uses: gruntwork-io/terragrunt-action@v2
