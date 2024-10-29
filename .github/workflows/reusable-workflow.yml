@@ -100,8 +100,9 @@ jobs:
         run: git ls-remote git@github.com:kwatatshey/labs-terraform-modules.git          
 
       - name: Test SSH Connection
-        run: ssh -T git@github.com    
-               
+        continue-on-error: true
+        run: ssh -T git@github.com || true 
+
       - name: Install AWS CLI
         id: install-aws-cli
         uses: unfor19/install-aws-cli-action@v1
