@@ -223,7 +223,7 @@ jobs:
             aws eks update-kubeconfig --region ${{ env.PROVISIONER_REGION }} --name ${{ env.CLUSTER_NAME }} --kubeconfig ${{ env.KUBE_CONFIG_PATH }}
           else
             echo "Skipping kubeconfig update as the cluster does not exist."
-          fi
+          fi || true
 
       - name: Kubectl Config Use Context
         id: kubectl-config-use-context
@@ -233,7 +233,7 @@ jobs:
             kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config use-context arn:aws:eks:${{ env.PROVISIONER_REGION }}:${{ env.DEPLOY_ACCOUNT }}:cluster/${{ env.CLUSTER_NAME }}
           else
             echo "Skipping kubectl config use-context as the cluster does not exist."
-          fi
+          fi || true
   
       - name: Print Current User
         id: print-current-user
@@ -243,7 +243,7 @@ jobs:
             kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config view --minify -o jsonpath='{.users[0].user}'
           else
             echo "Skipping print current user as the cluster does not exist."
-          fi          
+          fi || true
 
       - name: Create Terraform Plugin Cache Dir
         id: create-terraform-plugin-cache-dir
