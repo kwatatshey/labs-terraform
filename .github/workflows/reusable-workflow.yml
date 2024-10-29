@@ -8,12 +8,40 @@ on:
           required: true
           default: 'dev'
           type: string
-
-# permissions: 
-#   id-token: write
-#   contents: read
-
-permissions: write-all
+        Organization:
+          required: false
+          type: string
+        Repository:
+          required: false
+          type: string
+        devEnv:
+          required: false
+          type: string
+        uatEnv: 
+          required: false
+          type: string
+        prodEnv:
+          required: false
+          type: string
+        devBranch:
+          required: false
+          type: string
+        uatBranch:
+          required: false
+          type: string
+        prodBranch:
+          required: false
+          type: string
+        rootFolder:
+          required: false
+          type: string
+      secrets:
+        SSH_PRIVATE_KEY:
+          required: true
+          
+permissions: 
+  id-token: write
+  contents: read
 
 env:
   DEBUG: true

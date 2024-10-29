@@ -37,7 +37,17 @@ jobs:
     uses: ./.github/workflows/reusable-workflow.yml
     with:
       environment_name: ${{ github.event.inputs.environment_name }}  # Provide the input required by the reusable workflow
-
+      Organization: "your-org"
+      Repository: "your-repo"
+      devEnv: "development"
+      uatEnv: "uat"
+      prodEnv: "production"
+      devBranch: "develop"
+      uatBranch: "uat"
+      prodBranch: "main"
+      rootFolder: "/path/to/root"
+    secrets:
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
   init:
     needs: [ reusable-workflow ]
     runs-on: ubuntu-latest
