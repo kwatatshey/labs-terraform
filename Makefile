@@ -5,7 +5,7 @@ OSNAME := $(shell uname -s)
 all: lint
 
 lint:
-    @docker run -v ${PWD}:/lint -w /lint ghcr.io/antonbabenko/pre-commit-terraform:${PRE_COMMIT_TERRAFORM_VERSION} run -a || (git add . && git commit -m "Apply pre-commit hook changes" && false)
+	@docker run -v ${PWD}:/lint -w /lint ghcr.io/antonbabenko/pre-commit-terraform:${PRE_COMMIT_TERRAFORM_VERSION} run -a
 
 install: install_precommit
 
