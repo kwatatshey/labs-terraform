@@ -1,0 +1,137 @@
+name: Reusable-Workflow
+
+on: workflow_call
+
+env:
+  DEBUG: true
+  WORKING_DIRECTORY: ./labs/dev/aws
+  DEPLOY_ACCOUNT: ${{ vars.DEPLOY_ACCOUNT }}
+  PROVISIONER_REGION: ${{ vars.PROVISIONER_REGION }}
+  DEPLOYMENT_ROLE_NAME: ${{ vars.DEPLOYMENT_ROLE_NAME }}
+  DEPLOYMENT_ROLE_SESSION_NAME: githubactionsession
+  TF_ENV_VERSION: 1.9.8
+  TG_ENV_VERSION: 0.68.5
+
+
+jobs:
+  reusable-workflow:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+
+    steps:
+      - name: Setup Node.js environment
+        id: setup-node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Checkout Repository
+        id: checkout-repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install AWS CLI
+        id: install-aws-cli
+        uses: unfor19/install-aws-cli-action@v1
+
+      - name: Setup Terraform
+        id: setup-terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_ENV_VERSION }}
+
+      - name: Install TFENV
+        id: install-tfenv
+        run: |
+          git clone --depth=1 https://github.com/tfutils/tfenv.git ${HOME}/.tfenv
+          echo 'export PATH="${HOME}/.tfenv/bin:${PATH}"' >> ${HOME}/.bash_profile
+          mkdir -p ${HOME}/.local/bin
+          ln -s ${HOME}/.tfenv/bin/* ${HOME}/.local/bin
+          export PATH="${HOME}/.tfenv/bin:${PATH}"
+          . ${HOME}/.profile
+
+      - name: Setup Terraform TFENV
+        id: setup-tfenv
+        run: |
+          tfenv install ${{ env.TF_ENV_VERSION }}
+          tfenv use ${{ env.TF_ENV_VERSION }}
+
+      - name: Verify Terraform Version
+        id: verify-terraform-version
+        run: terraform --version
+
+      - name: Install Terragrunt
+        id: install-terragrunt
+        run: |
+          curl -LO https://github.com/gruntwork-io/terragrunt/releases/download/v0.68.5/terragrunt_linux_amd64
+          chmod +x terragrunt_linux_amd64
+          sudo mv terragrunt_linux_amd64 /usr/local/bin/terragrunt
+
+      - name: Install TGENV
+        id: install-tgenv
+        run: |
+          git clone --depth=1 https://github.com/tgenv/tgenv.git ${HOME}/.tgenv
+          echo 'export PATH="${HOME}/.tgenv/bin:${PATH}"' >> ${HOME}/.bash_profile
+          mkdir -p ${HOME}/.local/bin
+          ln -s ${HOME}/.tgenv/bin/* ${HOME}/.local/bin
+          export PATH="${HOME}/.tgenv/bin:${PATH}"
+          . ${HOME}/.profile
+
+      - name: Setup Terragrunt TGENV
+        id: setup-tgenv
+        run: |
+          tgenv install ${{ env.TG_ENV_VERSION }}
+          tgenv use ${{ env.TG_ENV_VERSION }}
+  
+      - name: Verify Terragrunt Version
+        id: verify-terragrunt-version
+        run: terragrunt --version   
+
+      - name: Install Kubectl
+        id: install-kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/
+
+      - name: Set up SSH for Git
+        id: set-up-ssh
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.ORG_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/id_rsa
+
+      - name: Check ENVIRONMENT_NAME
+        id: check-environment-name
+        run: echo "Environment Name is $ENVIRONMENT_NAME"
+
+      - name: Configure AWS credentials with OIDC assume role
+        id: configure-aws-credentials
+        uses: aws-actions/configure-aws-credentials@v4.0.2
+        with:
+          role-to-assume: arn:aws:iam::${{ env.DEPLOY_ACCOUNT }}:role/${{ env.DEPLOYMENT_ROLE_NAME }}
+          aws-region: ${{ env.PROVISIONER_REGION }}
+          role-session-name: ${{ env.DEPLOYMENT_ROLE_SESSION_NAME }}
+
+      - name: STS Get Caller Identity After OIDC
+        id: sts-get-caller-identity
+        run: aws sts get-caller-identity
+
+      - name: Set KUBE_CONFIG_PATH environment variable
+        id: set-kube-config-path
+        run: echo "KUBE_CONFIG_PATH=./kubeconfig" >> $GITHUB_ENV
+
+      - name: Check terragrunt HCL
+        uses: gruntwork-io/terragrunt-action@v2
+        with:
+            tofu_version: ${{ env.TF_ENV_VERSION }}
+            tg_version: ${{ env.TG_ENV_VERSION }}
+            tg_dir: ${{ env.WORKING_DIRECTORY }}
+            tg_command: 'hclfmt --terragrunt-check --terragrunt-diff'
+

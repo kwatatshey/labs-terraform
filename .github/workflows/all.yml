@@ -1,0 +1,230 @@
+name: All-Terragrunt
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment_name:
+        description: 'Environment name'
+        required: true
+        default: 'dev'
+
+  pull_request:
+    paths:
+      - 'labs/dev/aws/**'
+  push:
+    paths:
+      - 'labs/dev/aws/**'
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  TF_IN_AUTOMATION: true
+  ENVIRONMENT_NAME: dev
+  DEBUG: true
+  WORKING_DIRECTORY: ./labs/dev/aws
+  PROVISIONER_REGION: ${{ vars.PROVISIONER_REGION }}
+  TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform.d/plugin-cache
+
+
+jobs:
+  reusable-workflow:
+    uses: ./.github/workflows/reusable-workflow.yml
+
+  init:
+    needs: [ reusable-workflow ]
+    runs-on: ubuntu-latest
+    environment: ${{ env.ENVIRONMENT_NAME }}
+    steps:
+      - name: Find Cluster Name
+        id: find_cluster
+        run: |
+          CLUSTER_NAME=$(aws eks list-clusters --region ${{ env.PROVISIONER_REGION }} --query "clusters[0]" --output text)
+          if [ -z "$CLUSTER_NAME" ]; then
+            echo "Cluster does not exist"
+            echo "CLUSTER_EXISTS=false" >> $GITHUB_ENV
+          else
+            echo "Cluster exists: $CLUSTER_NAME"
+            echo "CLUSTER_NAME=$CLUSTER_NAME" >> $GITHUB_ENV
+            echo "CLUSTER_EXISTS=true" >> $GITHUB_ENV
+          fi
+
+      - name: Update Kubeconfig
+        id: update-kubeconfig
+        if: env.CLUSTER_EXISTS == 'true'
+        run: |
+          aws eks update-kubeconfig --region ${{ env.PROVISIONER_REGION }} --name ${{ env.CLUSTER_NAME }} --kubeconfig ${{ env.KUBE_CONFIG_PATH }}
+
+      - name: Kubectl config use-context
+        id: kubectl-config-use-context
+        if: env.CLUSTER_EXISTS == 'true'
+        run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config use-context arn:aws:eks:${{ env.PROVISIONER_REGION }}:${{ env.DEPLOY_ACCOUNT }}:cluster/dbtfDnA-cluster-sbx
+
+      - name: Print current context
+        id: print-current-context
+        if: env.CLUSTER_EXISTS == 'true'
+        run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config current-context
+
+      - name: Print current user
+        id: print-current-user
+        if: env.CLUSTER_EXISTS == 'true'
+        run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config view --minify -o jsonpath='{.users[0].user}'
+
+      - name: Create Terraform Plugin Cache Dir
+        run: mkdir -p $TF_PLUGIN_CACHE_DIR
+
+      - name: Terraform Plugin Cache
+        uses: actions/cache@v4.0.1
+        with:
+          path: ${{ env.TF_PLUGIN_CACHE_DIR }}
+          key: ${{ runner.os }}-terraform-plugin-cache-${{ hashFiles('**/.terraform.lock.hcl') }}
+
+      - name: Init
+        uses: gruntwork-io/terragrunt-action@v2
+        with:
+          tofu_version: ${{ env.TF_ENV_VERSION}}
+          tg_version: ${{ env.TG_ENV_VERSION }}
+          tg_dir: ${{ env.WORKING_DIRECTORY }}
+          tg_command: 'init'  
+        env:
+          TF_VAR_github_username: ${{ secrets.ORG_GIT_USERNAME }}
+          TF_VAR_github_token: ${{ secrets.ORG_GIT_TOKEN }}     
+          
+          
+  plan:
+    needs: [ reusable-workflow, init ]
+    runs-on: ubuntu-latest
+    environment: ${{ env.ENVIRONMENT_NAME }}
+    steps:
+      - name: Find Cluster Name 
+        id: find_cluster
+        run: |
+          CLUSTER_NAME=$(aws eks list-clusters --region ${{ env.PROVISIONER_REGION }} --query "clusters[0]" --output text)
+          if [ -z "$CLUSTER_NAME" ]; then
+            echo "Cluster does not exist"
+            echo "CLUSTER_EXISTS=false" >> $GITHUB_ENV
+          else
+            echo "Cluster exists: $CLUSTER_NAME"
+            echo "CLUSTER_NAME=$CLUSTER_NAME" >> $GITHUB_ENV
+            echo "CLUSTER_EXISTS=true" >> $GITHUB_ENV
+          fi
+
+      - name: Update Kubeconfig
+        id: update-kubeconfig
+        if: env.CLUSTER_EXISTS == 'true'
+        run: |
+          aws eks update-kubeconfig --region ${{ env.PROVISIONER_REGION }} --name ${{ env.CLUSTER_NAME }} --kubeconfig ${{ env.KUBE_CONFIG_PATH }}
+
+      - name: Kubectl config use-context
+        id: kubectl-config-use-context
+        if: env.CLUSTER_EXISTS == 'true'
+        run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config use-context arn:aws:eks:${{ env.PROVISIONER_REGION }}:${{ env.DEPLOY_ACCOUNT }}:cluster/dbtfDnA-cluster-sbx
+
+      - name: Print current context
+        id: print-current-context
+        if: env.CLUSTER_EXISTS == 'true'
+        run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config current-context
+
+      - name: Print current user
+        id: print-current-user
+        if: env.CLUSTER_EXISTS == 'true'
+        run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config view --minify -o jsonpath='{.users[0].user}'
+
+      - name: Plan
+        uses: gruntwork-io/terragrunt-action@v2
+        with:
+          tofu_version: ${{ env.TF_ENV_VERSION}}
+          tg_version: ${{ env.TG_ENV_VERSION }}
+          tg_dir: ${{ env.WORKING_DIRECTORY }}
+          tg_command: 'plan'  
+        env:
+          TF_VAR_github_username: ${{ secrets.ORG_GIT_USERNAME }}
+          TF_VAR_github_token: ${{ secrets.ORG_GIT_TOKEN }}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      # - name: Terragrunt Init
+      #   id : terragrunt-init
+      #   run: terragrunt run-all init
+      #   env:
+      #     TF_VAR_github_username: ${{ secrets.ORG_GIT_USERNAME }}
+      #     TF_VAR_github_token: ${{ secrets.ORG_GIT_TOKEN }}
+
+    #   - name: Terraform Validate
+    #     id: tf-validate
+    #     run: terraform -chdir=${{ matrix.folder }} validate
+    #     env:
+    #       TF_VAR_github_username: ${{ secrets.ORG_GIT_USERNAME }}
+    #       TF_VAR_github_token: ${{ secrets.ORG_GIT_TOKEN }}
+    
+
+    #   - name: Terraform Format
+    #     id : tf-format
+    #     run: |
+    #       terraform -chdir=${{ matrix.folder }} fmt -recursive
+    #       terraform -chdir=${{ matrix.folder }} fmt -check
+    #     env:
+    #       TF_VAR_github_username: ${{ secrets.ORG_GIT_USERNAME }}
+    #       TF_VAR_github_token: ${{ secrets.ORG_GIT_TOKEN }}
+          
+      # - name: Install TFLint
+      #   id: tflint-install
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #     curl -sSfL https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash -s -- -b $HOME/bin v0.53.0
+      #     echo "$HOME/bin" >> $GITHUB_PATH
+
+      # - name: Terraform Lint
+      #   id: tf-lint
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #     tflint --init --config $GITHUB_WORKSPACE/.tflint.hcl
+      #     tflint --config $GITHUB_WORKSPACE/.tflint.hcl
+
+    #   - name: Terraform Plan
+    #     id : tf-plan
+    #     if: github.event_name == 'pull_request'
+    #     run: terraform -chdir=${{ matrix.folder }} plan -var-file=terraform.${{ env.ENVIRONMENT_NAME }}.tfvars -no-color
+    #     continue-on-error: true
+    #     env:
+    #       TF_VAR_github_username: ${{ secrets.ORG_GIT_USERNAME }}
+    #       TF_VAR_github_token: ${{ secrets.ORG_GIT_TOKEN }}
+
+    #   - name: Terraform Plan Status
+    #     id: tf-plan-status
+    #     if: steps.plan.outcome == 'failure' && github.event_name == 'pull_request'
+    #     run: exit 1
+    #     env:
+    #       TF_VAR_github_username: ${{ secrets.ORG_GIT_USERNAME }}
+    #       TF_VAR_github_token: ${{ secrets.ORG_GIT_TOKEN }} 
+
+    #   - name: Terraform Apply
+    #     id : tf-apply
+    #     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    #     run: terraform -chdir=${{ matrix.folder }} apply -auto-approve -var-file=terraform.${{ env.ENVIRONMENT_NAME }}.tfvars
+    #     env:
+    #       TF_VAR_github_username: ${{ secrets.ORG_GIT_USERNAME }}
+    #       TF_VAR_github_token: ${{ secrets.ORG_GIT_TOKEN }}   
