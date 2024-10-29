@@ -9,9 +9,11 @@ on:
           default: 'dev'
           type: string
 
-permissions:
-  id-token: write
-  contents: read
+# permissions: 
+#   id-token: write
+#   contents: read
+
+permissions: write-all
 
 env:
   DEBUG: true
@@ -28,7 +30,7 @@ env:
 jobs:
   reusable-workflow:
     runs-on: ubuntu-latest
-    environment: dev
+    environment: ${{ github.event.inputs.environment_name }}
     defaults:
       run:
         working-directory: ${{ env.WORKING_DIRECTORY }}
