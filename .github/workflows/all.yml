@@ -23,7 +23,7 @@ permissions:
 
 env:
   TF_IN_AUTOMATION: true
-  ENVIRONMENT_NAME: dev
+  ENVIRONMENT_NAME: ${{ github.event.inputs.environment_name }}
   DEBUG: true
   WORKING_DIRECTORY: ./labs/dev/aws
   PROVISIONER_REGION: ${{ vars.PROVISIONER_REGION }}
@@ -37,7 +37,7 @@ jobs:
   init:
     needs: [ reusable-workflow ]
     runs-on: ubuntu-latest
-    environment: ${{ env.ENVIRONMENT_NAME }}
+    environment: ${{ github.event.inputs.environment_name }}
     steps:
       - name: Find Cluster Name
         id: find_cluster
@@ -97,7 +97,7 @@ jobs:
   plan:
     needs: [ reusable-workflow, init ]
     runs-on: ubuntu-latest
-    environment: ${{ env.ENVIRONMENT_NAME }}
+    environment: ${{ github.event.inputs.environment_name }}
     steps:
       - name: Find Cluster Name 
         id: find_cluster
