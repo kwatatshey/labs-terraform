@@ -52,6 +52,7 @@ env:
   DEPLOYMENT_ROLE_SESSION_NAME: githubactionsession
   TF_ENV_VERSION: 1.9.8
   TG_ENV_VERSION: 0.68.5
+  TF_OFU_ENV_VERSION: 1.8.4 # To check all available versions, run `curl -s https://api.github.com/repos/opentofu/opentofu/releases | jq '.[].tag_name'`
   ACTIONS_RUNNER_DEBUG: true
   ACTIONS_STEP_DEBUG: true
 
@@ -182,10 +183,16 @@ jobs:
         id: set-kube-config-path
         run: echo "KUBE_CONFIG_PATH=./kubeconfig" >> $GITHUB_ENV
 
+      - name: List OpenTofu Releases
+        id: list-opentofu-releases
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release list -R opentofu/opentofu
+
       - name: Check terragrunt HCL
         uses: gruntwork-io/terragrunt-action@v2
         with:
-            tofu_version: ${{ env.TF_ENV_VERSION }}
+            tofu_version: ${{ env.TF_OFU_ENV_VERSION }}
             tg_version: ${{ env.TG_ENV_VERSION }}
             tg_dir: ${{ env.WORKING_DIRECTORY }}
             tg_command: 'hclfmt --terragrunt-check --terragrunt-diff'
