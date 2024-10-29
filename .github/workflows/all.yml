@@ -34,7 +34,9 @@ env:
 jobs:
   reusable-workflow:
     uses: ./.github/workflows/reusable-workflow.yml
-
+    with:
+      environment_name: ${{ github.event.inputs.environment_name }}  # Provide the input required by the reusable workflow
+      
   init:
     needs: [ reusable-workflow ]
     runs-on: ubuntu-latest
