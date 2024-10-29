@@ -144,12 +144,8 @@ jobs:
           chmod +x kubectl
           sudo mv kubectl /usr/local/bin/
 
-      - name: Debug Environment Variables
-        run: env
-        env:
-            SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-
       - name: Set up SSH for Git
+        id : setup-ssh
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
@@ -161,16 +157,11 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Debug SSH Key
-        run: |
-          cat ~/.ssh/id_rsa
-        shell: bash
-
       - name: Check ENVIRONMENT_NAME
         id: check-environment-name
         run: echo "ENVIRONMENT_NAME=${{ github.event.inputs.environment_name }}"
 
-      - name: Configure AWS credentials with OIDC assume role
+      - name: Configure AWS Credentials With OIDC Assume Role
         id: configure-aws-credentials
         uses: aws-actions/configure-aws-credentials@v4.0.2
         with:
@@ -192,15 +183,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh release list -R opentofu/opentofu
 
-      - name: Check terragrunt HCL
+      - name: Terragrunt HCL Format
+        id: terragrunt-hcl-format
         uses: gruntwork-io/terragrunt-action@v2
         with:
             tofu_version: ${{ env.TF_OFU_ENV_VERSION }}
             tg_version: ${{ env.TG_ENV_VERSION }}
             tg_dir: ${{ env.WORKING_DIRECTORY }}
             tg_command: 'hclfmt --terragrunt-check --terragrunt-diff'
-
-### Workflow for init, validate and plan ###
 
       - name: Find Cluster Name
         id: find_cluster
@@ -217,35 +207,44 @@ jobs:
 
       - name: Update Kubeconfig
         id: update-kubeconfig
-        if: env.CLUSTER_EXISTS == 'true'
         run: |
-          aws eks update-kubeconfig --region ${{ env.PROVISIONER_REGION }} --name ${{ env.CLUSTER_NAME }} --kubeconfig ${{ env.KUBE_CONFIG_PATH }}
+          if [ "${{ env.CLUSTER_EXISTS }}" == "true" ]; then
+            aws eks update-kubeconfig --region ${{ env.PROVISIONER_REGION }} --name ${{ env.CLUSTER_NAME }} --kubeconfig ${{ env.KUBE_CONFIG_PATH }}
+          else
+            echo "Skipping kubeconfig update as the cluster does not exist."
+          fi
 
-      - name: Kubectl config use-context
+      - name: Kubectl Config Use Context
         id: kubectl-config-use-context
-        if: env.CLUSTER_EXISTS == 'true'
-        run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config use-context arn:aws:eks:${{ env.PROVISIONER_REGION }}:${{ env.DEPLOY_ACCOUNT }}:cluster/dbtfDnA-cluster-sbx
-
-      - name: Print current context
-        id: print-current-context
-        if: env.CLUSTER_EXISTS == 'true'
-        run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config current-context
-
-      - name: Print current user
+        run: |
+          if [ "${{ env.CLUSTER_EXISTS }}" == "true" ]; then
+            kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config use-context arn:aws:eks:${{ env.PROVISIONER_REGION }}:${{ env.DEPLOY_ACCOUNT }}:cluster/${{ env.CLUSTER_NAME }}
+          else
+            echo "Skipping kubectl config use-context as the cluster does not exist."
+          fi
+  
+      - name: Print Current User
         id: print-current-user
-        if: env.CLUSTER_EXISTS == 'true'
-        run: kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config view --minify -o jsonpath='{.users[0].user}'
+        run: |
+          if [ "${{ env.CLUSTER_EXISTS }}" == "true" ]; then
+            kubectl --kubeconfig ${{ env.KUBE_CONFIG_PATH }} config view --minify -o jsonpath='{.users[0].user}'
+          else
+            echo "Skipping print current user as the cluster does not exist."
+          fi          
 
       - name: Create Terraform Plugin Cache Dir
+        id: create-terraform-plugin-cache-dir
         run: mkdir -p $TF_PLUGIN_CACHE_DIR
 
       - name: Terraform Plugin Cache
+        id: terraform-plugin-cache
         uses: actions/cache@v4.0.1
         with:
           path: ${{ env.TF_PLUGIN_CACHE_DIR }}
           key: ${{ runner.os }}-terraform-plugin-cache-${{ hashFiles('**/.terraform.lock.hcl') }}
 
-      - name: Init
+      - name: Terragrunt Init
+        id: terragrunt-init
         uses: gruntwork-io/terragrunt-action@v2
         with:
           tofu_version: ${{ env.TF_ENV_VERSION}}
@@ -274,7 +273,8 @@ jobs:
             git commit -m "Update full directory structure [skip ci]" || echo "No changes to commit"
             git push
 
-      - name: Validate
+      - name: Terragrunt Validate
+        id: terragrunt-validate
         uses: gruntwork-io/terragrunt-action@v2
         with:
           tofu_version: ${{ env.TF_ENV_VERSION}}
@@ -285,7 +285,8 @@ jobs:
           TF_VAR_github_username: ${{ secrets.GIT_USERNAME }}
           TF_VAR_github_token: ${{ secrets.GIT_TOKEN }}
         
-      - name: Plan
+      - name: Terragrunt Plan
+        id: terragrunt-plan
         uses: gruntwork-io/terragrunt-action@v2
         with:
           tofu_version: ${{ env.TF_ENV_VERSION}}
