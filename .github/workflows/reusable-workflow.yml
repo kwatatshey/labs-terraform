@@ -57,7 +57,7 @@ env:
   ACTIONS_STEP_DEBUG: true
 
 jobs:
-  reusable-workflow:
+  reusable-job:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment_name }}
     defaults:
