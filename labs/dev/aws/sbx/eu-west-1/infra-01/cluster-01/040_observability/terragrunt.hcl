@@ -30,7 +30,7 @@ dependency "eks" {
     eks_endpoint          = "https://example.com/eks"
     eks_certificate       = "aGVsbG93b3JsZAo="
     eks_cluster_name      = "test_cluster"
-    eks_region            = "us-east-1"
+    eks_region            = "eu-west-1"
     acm_certificate_arn   = "aGVsbG93b3JsZAo="
     eks_oidc_provider_arn = "arn::test"
     cluster_autoscaler = {
