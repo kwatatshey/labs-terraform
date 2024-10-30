@@ -82,6 +82,12 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Check AWS_ROOT_PATH
+        id: check-aws-root-path
+        run: |
+          echo "AWS_ROOT_PATH=${AWS_ROOT_PATH}"
+          ls -la ${{ env.AWS_ROOT_PATH }}
+
       - name: create directory to pass ssh-agent socket
         run: "mkdir -p /home/runner/work/_temp/_github_workflow"
         shell: bash
