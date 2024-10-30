@@ -6,6 +6,7 @@
 |-- cf.yml
 |-- graph_curl.svg
 |-- graph_rect.svg
+|-- kubeconfig
 |-- labs
 |   |-- Infrastructure
 |   |   `-- eu-west-1
@@ -183,5 +184,5 @@
 |-- terragrunt-dependency-graph.dot
 `-- terragrunt.hcl
 
-98 directories, 84 files
+98 directories, 85 files
 ```
