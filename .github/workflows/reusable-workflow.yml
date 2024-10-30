@@ -279,6 +279,11 @@ jobs:
           else
             echo ".terragrunt-cache directories not found."
           fi || true
+          
+      - name: Install Graphviz
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y graphviz
 
       - name: Terragrunt Init
         id: terragrunt-init
@@ -294,26 +299,32 @@ jobs:
           TF_VAR_github_token: ${{ secrets.GIT_TOKEN }} 
           # TF_PLUGIN_CACHE_DIR: /github/workspace/.terraform.d/plugin-cache
           INPUT_POST_EXEC_1: |
-            sudo apt-get update
-            sudo apt-get install -y graphviz
-            # Generate dependency graphs in DOT format
-            terragrunt graph-dependencies --terragrunt-source --terragrunt-non-interactive > ${GITHUB_WORKSPACE}/terragrunt-dependency-graph.dot
-            echo "Generated dependency graph in DOT format."
-
-            
-            # Generate SVG from the dependency graph
-            dot -Tsvg ${GITHUB_WORKSPACE}/terragrunt-dependency-graph.dot -o ${GITHUB_WORKSPACE}/graph.svg
-            echo "Generated SVG dependency graph."
-            
-            # Git configuration for pushing changes
-            git config --local user.name "github-actions[bot]"
-            git config --local user.email "github-actions[bot]@users.noreply.github.com"
-            git remote set-url origin git@github.com:${GITHUB_REPOSITORY}.git
-            
-            # Add and commit the generated graphs
-            git add terragrunt-dependency-graph.dot graph.svg
-            git commit -m "Update Terragrunt dependency graph [skip ci]" || echo "No changes to commit"
-            git push
+            # Run the commands in a subshell to avoid readonly variable issues
+            (
+              # Generate SVG directly from terragrunt graph-dependencies
+              terragrunt graph-dependencies --terragrunt-source --terragrunt-non-interactive | dot -Tsvg -Nshape=rect -Gsplines=ortho -o ${GITHUB_WORKSPACE}/graph.svg
+              
+              if [ $? -ne 0 ]; then
+                echo "Failed to generate SVG dependency graph."
+                exit 1
+              fi || true
+              echo "Generated SVG dependency graph."
+      
+              # Git configuration for pushing changes
+              git config --local user.name "github-actions[bot]"
+              git config --local user.email "github-actions[bot]@users.noreply.github.com"
+              git remote set-url origin git@github.com:${GITHUB_REPOSITORY}.git
+              
+              # Check if the SVG file exists before adding it to git
+              if [ -f ${GITHUB_WORKSPACE}/graph.svg ]; then
+                git add ${GITHUB_WORKSPACE}/graph.svg
+              else
+                echo "File 'graph.svg' does not exist."
+              fi || true
+              
+              git commit -m "Update Terragrunt dependency graph [skip ci]" || echo "No changes to commit"
+              git push
+            )
           SSH_AUTH_SOCK: "/github/workflow/ssh-agent.sock"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
