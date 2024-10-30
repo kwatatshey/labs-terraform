@@ -339,6 +339,10 @@ jobs:
             )
 
           INPUT_POST_EXEC_3: |
+            # Install tree command
+            sudo apt-get update
+            sudo apt-get install -y tree
+            
             # Generate Directory Structure excluding .git and save to TREE.md
             tree -L 5 --exclude .git ${GITHUB_WORKSPACE} > ${GITHUB_WORKSPACE}/TREE.md
             echo "Generated directory structure in TREE.md."
