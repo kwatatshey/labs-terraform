@@ -385,7 +385,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
       - name: Terragrunt Plan
-        if: steps.find_cluster.outputs.CLUSTER_EXISTS == 'true'
+        if: env.CLUSTER_EXISTS == 'true'
         id: terragrunt-plan
         uses: gruntwork-io/terragrunt-action@v2
         with:
