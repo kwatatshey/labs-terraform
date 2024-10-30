@@ -280,17 +280,18 @@ jobs:
             echo "Generated full Terragrunt graph in DOT format."
             git config --local user.name "github-actions[bot]"
             git config --local user.email "github-actions[bot]@users.noreply.github.com"
+            git remote set-url origin git@github.com:${GITHUB_REPOSITORY}.git
             git add terragrunt-dependency-graph.dot terragrunt-full-graph.dot
             git commit -m "Update Terragrunt dependency graph and Terragrunt-full-graph  [skip ci]" || echo "No changes to commit"
             git push
           INPUT_POST_EXEC_2: |
             tree -a > tree.txt
             echo "Generated full directory structure file."
+            git remote set-url origin git@github.com:${GITHUB_REPOSITORY}.git
             git add tree.txt
             git commit -m "Update full directory structure [skip ci]" || echo "No changes to commit"
             git push
           SSH_AUTH_SOCK: "/github/workflow/ssh-agent.sock"
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TF_LOG: DEBUG
 
       - name: Terragrunt Validate
