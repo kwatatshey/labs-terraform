@@ -47,7 +47,7 @@ permissions:
 env:
   DEBUG: true
   # WORKING_DIRECTORY: ./labs/dev/aws
-  AWS_ROOT_PATH: ${{ github.event.inputs.rootFolder }}
+  AWS_ROOT_PATH: ${{ inputs.rootFolder }}
   DEPLOY_ACCOUNT: ${{ vars.DEPLOY_ACCOUNT }}
   PROVISIONER_REGION: ${{ vars.PROVISIONER_REGION }}
   DEPLOYMENT_ROLE_NAME: ${{ vars.DEPLOYMENT_ROLE_NAME }}
@@ -58,12 +58,12 @@ env:
   ACTIONS_RUNNER_DEBUG: true
   ACTIONS_STEP_DEBUG: true
   TF_IN_AUTOMATION: true
-  ENVIRONMENT_NAME: ${{ github.event.inputs.environment_name }}
+  ENVIRONMENT_NAME: ${{ inputs.environment_name }}
 
 jobs:
   reusable-job:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment_name }}
+    environment: ${{ inputs.environment_name }}
     # defaults:
     #   run:
     #     working-directory: ${{ github.workspace }}
