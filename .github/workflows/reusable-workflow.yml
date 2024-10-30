@@ -203,10 +203,12 @@ jobs:
           if [ -z "$CLUSTER_NAME" ]; then
             echo "Cluster does not exist"
             echo "CLUSTER_EXISTS=false" >> $GITHUB_ENV
+            echo "CLUSTER_EXISTS=false" >> $GITHUB_OUTPUT
           else
             echo "Cluster exists: $CLUSTER_NAME"
             echo "CLUSTER_NAME=$CLUSTER_NAME" >> $GITHUB_ENV
             echo "CLUSTER_EXISTS=true" >> $GITHUB_ENV
+            echo "CLUSTER_EXISTS=true" >> $GITHUB_OUTPUT
           fi
 
       - name: Update Kubeconfig
@@ -383,7 +385,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
       - name: Terragrunt Plan
-        if: env.CLUSTER_EXISTS == 'true'
+        if: steps.find_cluster.outputs.CLUSTER_EXISTS == 'true'
         id: terragrunt-plan
         uses: gruntwork-io/terragrunt-action@v2
         with:
