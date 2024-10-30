@@ -1,0 +1,295 @@
+Parameters:
+  Environment:
+    Type: String
+    Description: The pipeline environment
+  AccountName:
+    Type: String
+    Description: The Account Name
+  ResourcePrefix:
+    Type: String
+    Description: The string to prepend to each resource's name
+  IaC:
+    Type: String
+    Description: Name of the IaC
+  TerraformTrustedArns:
+    Type: CommaDelimitedList
+    Description: The ARNs for Terraform's role trusted policy
+  GitHubOrg:
+    Description: Name of GitHub organization/user (case sensitive)
+    Type: String
+  RepositoryName:
+    Description: Name of GitHub repository (case sensitive)
+    Type: String
+  OIDCProviderArn:
+    Description: Arn for the GitHub OIDC Provider
+    Default: ""
+    Type: String
+  OIDCProviderThumbprintList:
+    Type: CommaDelimitedList
+    Description: The list of the OIDC provider's certificate thumbprint(s)
+    Default: "ffffffffffffffffffffffffffffffffffffffff"
+  OIDCAudience:
+    Description: Audience supplied to configure-aws-credentials.
+    Default: "sts.amazonaws.com"
+    Type: String
+
+Outputs:
+  TerraformStateBucketId:
+    Description: The ID of the Terraform state bucket
+    Value: !Ref TerraformStateStore
+  TerraformStateLockId:
+    Description: The ID of the Terraform state lock DynamoDB table
+    Value: !Ref TerraformStateLock
+  TerraformStateEncKeyId:
+    Description: The ID of the KMS key which encrypts the Terraform state bucket
+    Value: !Ref TerraformStateStoreKeyAlias
+  TerraformRoleId:
+    Description: The ID of the role used to run Terraform
+    Value: !Ref TerraformRole
+
+Conditions:
+  CreateOIDCProvider: !Equals
+    - !Ref OIDCProviderArn
+    - ""
+
+Resources:
+  GithubOidc:
+    Type: AWS::IAM::OIDCProvider
+    Condition: CreateOIDCProvider
+    Properties:
+      Url: https://token.actions.githubusercontent.com
+      ClientIdList:
+        - sts.amazonaws.com
+      ThumbprintList: !Ref OIDCProviderThumbprintList
+
+  TerraformRole:
+    Type: 'AWS::IAM::Role'
+    DeletionPolicy: Delete
+    Properties:
+      RoleName: !Sub '${ResourcePrefix}-${Environment}-${IaC}-${AccountName}-${AWS::Region}-${AWS::AccountId}'
+      Description: !Sub 'Role to execute ${IaC} in ${Environment} environment in account ${AccountName}'
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Ref TerraformTrustedArns
+            Action:
+              - 'sts:AssumeRole'
+          - Effect: Allow
+            Action: sts:AssumeRoleWithWebIdentity
+            Principal:
+              Federated: !If
+                - CreateOIDCProvider
+                - !Ref GithubOidc
+                - !Ref OIDCProviderArn
+            Condition:
+              StringEquals:
+                token.actions.githubusercontent.com:aud: !Ref OIDCAudience
+              StringLike:
+                token.actions.githubusercontent.com:sub: !Sub repo:${GitHubOrg}/${RepositoryName}:*
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/PowerUserAccess
+        - arn:aws:iam::aws:policy/IAMFullAccess
+      Tags:
+        - Key: Owner
+          Value: SolutionsConsulting
+        - Key: Project
+          Value: Terragrunt
+        - Key: CodeOwner
+          Value: Gauthier Kwatatshey 
+        - Key: Environment
+          Value:
+            Ref: Environment
+        - Key: Name
+          Value: !Sub '${ResourcePrefix}-${Environment}-${IaC}-${AccountName}-${AWS::Region}-${AWS::AccountId}'
+
+  TerraformStatePolicy:
+    Type: 'AWS::IAM::ManagedPolicy'
+    DeletionPolicy: Delete
+    Properties:
+      Description: Policy to allow the usage of the resources needed by the Terraform state
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowPipelineListBucketTerraformState
+            Effect: Allow
+            Resource:
+              - !Sub 'arn:aws:s3:::${TerraformStateStore}/*'
+            Action:
+              - "s3:PutObject"
+              - "s3:DeleteObject"
+              - "s3:GetObject"
+              - "s3:GetObjectVersion"
+          - Sid: AllowPipelineReadWriteTerraformState
+            Effect: Allow
+            Resource:
+              - !Sub 'arn:aws:s3:::${TerraformStateStore}'
+            Action:
+              - "s3:GetBucketVersioning"
+              - "s3:GetBucketAcl"
+              - "s3:ListBucket"
+              - "s3:ListBucketVersions"
+          - Sid: AllowReadWriteStatusDynamoDBTable
+            Effect: Allow
+            Resource:
+              - !GetAtt TerraformStateLock.Arn
+            Action:
+              - "dynamodb:DescribeTable"
+              - "dynamodb:GetItem"
+              - "dynamodb:PutItem"
+              - "dynamodb:DeleteItem"
+      Roles:
+        - !Ref TerraformRole
+
+  TerraformStateStore:
+    Type: 'AWS::S3::Bucket'
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: !Sub '${ResourcePrefix}-states-${IaC}-${AccountName}-${AWS::Region}-${AWS::AccountId}'
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Enabled
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - BucketKeyEnabled: true
+            ServerSideEncryptionByDefault:
+              SSEAlgorithm: "aws:kms"
+              KMSMasterKeyID: !GetAtt TerraformStateStoreKey.Arn
+      Tags:
+        - Key: Owner
+          Value: SolutionsConsulting
+        - Key: Project
+          Value: Terragrunt
+        - Key: CodeOwner
+          Value: Gauthier Kwatatshey 
+        - Key: Environment
+          Value:
+            Ref: Environment
+        - Key: Name
+          Value: !Sub '${ResourcePrefix}-states-${IaC}-${AccountName}-${AWS::Region}-${AWS::AccountId}'
+
+  TerraformStateStoreKey:
+    Type: 'AWS::KMS::Key'
+    DeletionPolicy: Retain
+    Properties:
+      Description: KMS for the encryption of the Terraform state bucket
+      Enabled: true
+      KeyUsage: ENCRYPT_DECRYPT
+      KeySpec: SYMMETRIC_DEFAULT
+      EnableKeyRotation: true
+      MultiRegion: false
+      KeyPolicy:
+        Version: 2012-10-17
+        Id: key-cloudformation-1
+        Statement:
+          - Sid: Enable IAM User Permissions
+            Effect: Allow
+            Principal:
+              AWS: !Sub 'arn:aws:iam::${AWS::AccountId}:root'
+            Action: 'kms:*'
+            Resource: '*'
+          - Sid: Allow administration of the key
+            Effect: Allow
+            Principal:
+              AWS: !Ref TerraformTrustedArns
+            Action:
+              - 'kms:Create*'
+              - 'kms:Describe*'
+              - 'kms:Enable*'
+              - 'kms:List*'
+              - 'kms:Put*'
+              - 'kms:Update*'
+              - 'kms:Revoke*'
+              - 'kms:Disable*'
+              - 'kms:Get*'
+              - 'kms:Delete*'
+              - 'kms:ScheduleKeyDeletion'
+              - 'kms:TagResource'
+              - 'kms:UntagResource'
+              - 'kms:CancelKeyDeletion'
+            Resource: '*'
+          - Sid: Allow use of the key
+            Effect: Allow
+            Principal:
+              AWS: !Split
+                - ','
+                - !Sub
+                  - '${TerraformTrustedArnsString},${TerraformRoleArn}'
+                  - TerraformTrustedArnsString: !Join [",", !Ref TerraformTrustedArns]
+                    TerraformRoleArn: !GetAtt TerraformRole.Arn
+            Action:
+              - 'kms:Encrypt'
+              - 'kms:Decrypt'
+              - 'kms:ReEncrypt*'
+              - 'kms:GenerateDataKey*'
+              - 'kms:DescribeKey'
+            Resource: '*'
+          - Sid: Allow attachment of persistent resources
+            Effect: Allow
+            Principal:
+              AWS: !Split
+                - ','
+                - !Sub
+                  - '${TerraformTrustedArnsString},${TerraformRoleArn}'
+                  - TerraformTrustedArnsString: !Join [",", !Ref TerraformTrustedArns]
+                    TerraformRoleArn: !GetAtt TerraformRole.Arn
+            Action:
+              - 'kms:CreateGrant'
+              - 'kms:ListGrants'
+              - 'kms:RevokeGrant'
+            Resource: '*'
+            Condition:
+              Bool:
+                "kms:GrantIsForAWSResource": true
+      Tags:
+        - Key: Owner
+          Value: SolutionsConsulting
+        - Key: Project
+          Value: Terragrunt
+        - Key: CodeOwner
+          Value: Gauthier Kwatatshey 
+        - Key: Environment
+          Value:
+            Ref: Environment
+        - Key: Name
+          Value: !Sub '${ResourcePrefix}-stateskey-${IaC}-${AccountName}-${AWS::Region}-${AWS::AccountId}'
+
+  TerraformStateStoreKeyAlias:
+    Type: 'AWS::KMS::Alias'
+    DeletionPolicy: Delete
+    Properties:
+      AliasName: !Sub 'alias/${ResourcePrefix}-stateskey-${IaC}-${AccountName}-${AWS::Region}-${AWS::AccountId}'
+      TargetKeyId: !Ref TerraformStateStoreKey
+
+  TerraformStateLock:
+    Type: 'AWS::DynamoDB::Table'
+    DeletionPolicy: Delete
+    Properties:
+      TableName: !Sub '${ResourcePrefix}-locks-${IaC}-${AccountName}-${AWS::Region}-${AWS::AccountId}'
+      BillingMode: PAY_PER_REQUEST
+      KeySchema:
+        - AttributeName: LockID
+          KeyType: HASH
+      AttributeDefinitions:
+        - AttributeName: LockID
+          AttributeType: S
+      Tags:
+        - Key: Owner
+          Value: SolutionsConsulting
+        - Key: Project
+          Value: Terragrunt
+        - Key: CodeOwner
+          Value: Gauthier Kwatatshey 
+        - Key: Environment
+          Value:
+            Ref: Environment
+        - Key: Name
+          Value: !Sub '${ResourcePrefix}-locks-${IaC}-${AccountName}-${AWS::Region}-${AWS::AccountId}'
