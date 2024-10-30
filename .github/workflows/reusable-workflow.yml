@@ -85,8 +85,12 @@ jobs:
       #   run: |
       #     sudo apt-get update
       #     sudo apt-get install -y graphviz
+      - name: Print Directory Structure
+        run: |
+          ls -la ${{ env.GITHUB_WORKSPACE }}
+          ls -la ${{ env.GITHUB_WORKSPACE }}/TREE.md
 
-      - name: Print Directory Structure(Tree)
+      - name: Generate Directory Structure(Tree)
         uses: jaywcjlove/github-action-folder-tree@main
         id: tree
         with:
