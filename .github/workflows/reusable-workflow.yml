@@ -80,6 +80,21 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+  
+      - name: Print Directory Structure(Tree)
+        uses: jaywcjlove/github-action-folder-tree@main
+        id: tree
+        with:
+          # exclude: "node_modules|dist|.git|.husky"
+          path: ${{ env.GITHUB_WORKSPACE }}
+          depth: 10
+    
+      - name: Modify TREE.md
+        id: modify-content-tree-md
+        uses: jaywcjlove/github-action-modify-file-content@main
+        with:
+          path: ${{ env.GITHUB_WORKSPACE }}/TREE.md
+          body: ${{ steps.tree.outputs.content }}
 
       - name: create directory to pass ssh-agent socket
         run: "mkdir -p /home/runner/work/_temp/_github_workflow"
@@ -284,15 +299,8 @@ jobs:
             git add terragrunt-dependency-graph.dot terragrunt-full-graph.dot
             git commit -m "Update Terragrunt dependency graph and Terragrunt-full-graph  [skip ci]" || echo "No changes to commit"
             git push
-          INPUT_POST_EXEC_2: |
-            tree -a > tree.txt
-            echo "Generated full directory structure file."
-            git remote set-url origin git@github.com:${GITHUB_REPOSITORY}.git
-            git add tree.txt
-            git commit -m "Update full directory structure [skip ci]" || echo "No changes to commit"
-            git push
           SSH_AUTH_SOCK: "/github/workflow/ssh-agent.sock"
-          TF_LOG: DEBUG
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Terragrunt Validate
         id: terragrunt-validate
