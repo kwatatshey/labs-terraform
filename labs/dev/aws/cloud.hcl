@@ -1,9 +1,9 @@
 locals {
-  my_cloud   = basename(get_terragrunt_dir())
-  my_account = read_terragrunt_config(find_in_parent_folders("account.hcl")).locals.my_account
+  my_cloud      = basename(get_terragrunt_dir())
+  my_account    = read_terragrunt_config(find_in_parent_folders("account.hcl")).locals.my_account
   my_account_id = read_terragrunt_config(find_in_parent_folders("account.hcl")).locals.my_account_id
-  my_region  = read_terragrunt_config(find_in_parent_folders("region.hcl")).locals.my_region
-  my_env     = read_terragrunt_config(find_in_parent_folders("env.hcl")).locals.my_env
+  my_region     = read_terragrunt_config(find_in_parent_folders("region.hcl")).locals.my_region
+  my_env        = read_terragrunt_config(find_in_parent_folders("env.hcl")).locals.my_env
 }
 
 generate "aws_provider" {
