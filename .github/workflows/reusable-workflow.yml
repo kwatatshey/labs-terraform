@@ -87,8 +87,7 @@ jobs:
       #     sudo apt-get install -y graphviz
       - name: Print Directory Structure
         run: |
-          ls -la ${{ env.GITHUB_WORKSPACE }}
-          ls -la ${{ env.GITHUB_WORKSPACE }}/TREE.md
+          ls -la  # Check the root directory contents
 
       - name: Generate Directory Structure(Tree)
         uses: jaywcjlove/github-action-folder-tree@main
@@ -103,18 +102,19 @@ jobs:
         id: modify-content-tree-md
         uses: jaywcjlove/github-action-modify-file-content@main
         with:
-          path: ${{ env.GITHUB_WORKSPACE }}/TREE.md
+          path: ${{ github.workspace }}
           body: ${{ steps.tree.outputs.content }}
 
       - name: Commit Tree Changes
-        id: commit-changes
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git remote set-url origin git@github.com:${GITHUB_REPOSITORY}.git
-          git add ${{ env.GITHUB_WORKSPACE }}/TREE.md
-          git commit -m "Update TREE.md [skip ci]"
+          # Add TREE.md from the root directory
+          git add ${GITHUB_WORKSPACE}/TREE.md
+          git commit -m "Update TREE.md [skip ci]" || echo "No changes to commit"
           git push
+        working-directory: ${{ github.workspace }}  
 
       - name: create directory to pass ssh-agent socket
         run: "mkdir -p /home/runner/work/_temp/_github_workflow"
