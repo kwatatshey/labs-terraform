@@ -239,6 +239,11 @@ jobs:
         with:
           path: ${{ env.TF_PLUGIN_CACHE_DIR }}
           key: ${{ runner.os }}-terraform-plugin-cache-${{ hashFiles('**/.terraform.lock.hcl') }}
+          
+      - name: Remove Terraform lock file and Terragrunt cache
+        run: |
+          rm $(find . -type f -name .terraform.lock.hcl) || true
+          rm -rf $(find . -type d -name .terragrunt-cache) || true
 
       - name: Terragrunt Init
         id: terragrunt-init
