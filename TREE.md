@@ -4,7 +4,6 @@
 |-- README.md
 |-- TREE.md
 |-- cf.yml
-|-- graph.svg
 |-- graph_curl.svg
 |-- graph_rect.svg
 |-- labs
@@ -184,5 +183,5 @@
 |-- terragrunt-dependency-graph.dot
 `-- terragrunt.hcl
 
-98 directories, 85 files
+98 directories, 84 files
 ```
