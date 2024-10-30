@@ -91,6 +91,7 @@ jobs:
         id: tree
         with:
           # exclude: "node_modules|dist|.git|.husky"
+          exclude: ".git"
           path: ${{ env.GITHUB_WORKSPACE }}
           depth: 5
     
@@ -100,6 +101,16 @@ jobs:
         with:
           path: ${{ env.GITHUB_WORKSPACE }}/TREE.md
           body: ${{ steps.tree.outputs.content }}
+
+      - name: Commit Changes
+        id: commit-changes
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin git@github.com:${GITHUB_REPOSITORY}.git
+          git add TREE.md
+          git commit -m "Update TREE.md [skip ci]"
+          git push
 
       - name: create directory to pass ssh-agent socket
         run: "mkdir -p /home/runner/work/_temp/_github_workflow"
@@ -306,14 +317,24 @@ jobs:
           INPUT_POST_EXEC_2: |
             # Run the commands in a subshell to avoid readonly variable issues
             (
-              # Generate SVG directly from terragrunt graph-dependencies
-              terragrunt graph-dependencies --terragrunt-source --terragrunt-non-interactive | dot -Tsvg -Nshape=rect -Gsplines=ortho -o ${GITHUB_WORKSPACE}/graph.svg
+              # Generate SVG file from terragrunt graph-dependencies in rect shape with orthogonal splines
+              terragrunt graph-dependencies --terragrunt-source --terragrunt-non-interactive | dot -Tsvg -Nshape=rect -Gsplines=ortho -o ${GITHUB_WORKSPACE}/graph_rect.svg
               
               if [ $? -ne 0 ]; then
-                echo "Failed to generate SVG dependency graph."
+                echo "Failed to generate rect SVG dependency graph."
                 exit 1
               fi || true
-              echo "Generated SVG dependency graph."
+              echo "Generated rect SVG dependency graph."
+
+              # Generate SVG file from terragrunt graph-dependencies in curl shape with curl splines
+              terragrunt  graph-dependencies --terragrunt-non-interactive | dot -Tsvg > ${GITHUB_WORKSPACE}/graph_curl.svg
+
+              if [ $? -ne 0 ]; then
+                echo "Failed to generate curl SVG dependency graph."
+                exit 1
+              fi || true
+              echo "Generated curl SVG dependency graph."
+
 
               # Generate the dependency graph in DOT format
               terragrunt graph-dependencies --terragrunt-source --terragrunt-non-interactive > ${GITHUB_WORKSPACE}/terragrunt-dependency-graph.dot
@@ -324,11 +345,18 @@ jobs:
               git config --local user.email "github-actions[bot]@users.noreply.github.com"
               git remote set-url origin git@github.com:${GITHUB_REPOSITORY}.git
               
-              # Check if the SVG file exists before adding it to git
-              if [ -f ${GITHUB_WORKSPACE}/graph.svg ]; then
-                git add ${GITHUB_WORKSPACE}/graph.svg
+              # Check if the rect SVG file exists before adding it to git
+              if [ -f ${GITHUB_WORKSPACE}/graph_rect.svg ]; then
+                git add ${GITHUB_WORKSPACE}/graph_rect.svg
               else
-                echo "File 'graph.svg' does not exist."
+                echo "File 'graph_rect.svg' does not exist."
+              fi || true
+
+              # Check if the curl SVG file exists before adding it to git
+              if [ -f ${GITHUB_WORKSPACE}/graph_curl.svg ]; then
+                git add ${GITHUB_WORKSPACE}/graph_curl.svg
+              else
+                echo "File 'graph_curl.svg' does not exist."
               fi || true
               
               # Check if the DOT file exists before adding it to git
