@@ -102,13 +102,13 @@ jobs:
           path: ${{ env.GITHUB_WORKSPACE }}/TREE.md
           body: ${{ steps.tree.outputs.content }}
 
-      - name: Commit Changes
+      - name: Commit Tree Changes
         id: commit-changes
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git remote set-url origin git@github.com:${GITHUB_REPOSITORY}.git
-          git add TREE.md
+          git add ${{ env.GITHUB_WORKSPACE }}/TREE.md
           git commit -m "Update TREE.md [skip ci]"
           git push
 
