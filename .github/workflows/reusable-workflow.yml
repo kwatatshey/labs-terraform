@@ -41,8 +41,8 @@ on:
           
 permissions: 
   id-token: write
-  contents: read
-  actions: write
+  contents: write
+
 
 env:
   DEBUG: true
