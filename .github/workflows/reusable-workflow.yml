@@ -82,13 +82,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      # - name: Install Graphviz
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y graphviz
-      - name: Print Directory Structure
-        run: |
-          ls -la  # Check the root directory contents
+      - name: create directory to pass ssh-agent socket
+        run: "mkdir -p /home/runner/work/_temp/_github_workflow"
+        shell: bash
+
+      - uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh-auth-sock: "/home/runner/work/_temp/_github_workflow/ssh-agent.sock"
 
       - name: Generate Directory Structure(Tree)
         uses: jaywcjlove/github-action-folder-tree@main
@@ -98,7 +99,7 @@ jobs:
           exclude: ".git"
           path: .
           depth: 5
-    
+  
       - name: Modify TREE.md
         id: modify-content-tree-md
         uses: jaywcjlove/github-action-modify-file-content@main
@@ -117,15 +118,9 @@ jobs:
           git add TREE.md
           git commit -m "Update TREE.md [skip ci]" || echo "No changes to commit"
           git push
-
-      - name: create directory to pass ssh-agent socket
-        run: "mkdir -p /home/runner/work/_temp/_github_workflow"
-        shell: bash
-
-      - uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          ssh-auth-sock: "/home/runner/work/_temp/_github_workflow/ssh-agent.sock"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SSH_AUTH_SOCK: "/github/workflow/ssh-agent.sock"
 
       - name: Install AWS CLI
         id: install-aws-cli
