@@ -96,14 +96,14 @@ jobs:
         with:
           # exclude: "node_modules|dist|.git|.husky"
           exclude: ".git"
-          path: ${{ github.workspace }}
+          path: ./
           depth: 5
     
       - name: Modify TREE.md
         id: modify-content-tree-md
         uses: jaywcjlove/github-action-modify-file-content@main
         with:
-          path: ${{ github.workspace }}/TREE.md
+          path: ./TREE.md
           body: ${{ steps.tree.outputs.content }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
@@ -114,10 +114,9 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git remote set-url origin git@github.com:${GITHUB_REPOSITORY}.git
           # Add TREE.md from the root directory
-          git add ${GITHUB_WORKSPACE}/TREE.md
+          git add TREE.md
           git commit -m "Update TREE.md [skip ci]" || echo "No changes to commit"
           git push
-        working-directory: ${{ github.workspace }}  
 
       - name: create directory to pass ssh-agent socket
         run: "mkdir -p /home/runner/work/_temp/_github_workflow"
