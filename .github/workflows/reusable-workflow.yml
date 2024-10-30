@@ -87,7 +87,7 @@ jobs:
         with:
           # exclude: "node_modules|dist|.git|.husky"
           path: ${{ env.GITHUB_WORKSPACE }}
-          depth: 10
+          depth: 2
     
       - name: Modify TREE.md
         id: modify-content-tree-md
