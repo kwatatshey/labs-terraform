@@ -91,36 +91,36 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           ssh-auth-sock: "/home/runner/work/_temp/_github_workflow/ssh-agent.sock"
 
-      - name: Generate Directory Structure(Tree)
-        uses: jaywcjlove/github-action-folder-tree@main
-        id: tree
-        with:
-          # exclude: "node_modules|dist|.git|.husky"
-          exclude: ".git"
-          path: .
-          depth: 5
+      # - name: Generate Directory Structure(Tree)
+      #   uses: jaywcjlove/github-action-folder-tree@main
+      #   id: tree
+      #   with:
+      #     # exclude: "node_modules|dist|.git|.husky"
+      #     exclude: ".git"
+      #     path: .
+      #     depth: 5
   
-      - name: Modify TREE.md
-        id: modify-content-tree-md
-        uses: jaywcjlove/github-action-modify-file-content@main
-        with:
-          path: TREE.md
-          body: ${{ steps.tree.outputs.content }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+      # - name: Modify TREE.md
+      #   id: modify-content-tree-md
+      #   uses: jaywcjlove/github-action-modify-file-content@main
+      #   with:
+      #     path: TREE.md
+      #     body: ${{ steps.tree.outputs.content }}
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
           
-      - name: Commit Tree Changes
-        run: |
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git remote set-url origin git@github.com:${GITHUB_REPOSITORY}.git
-          # Add TREE.md from the root directory
-          git add TREE.md
-          git commit -m "Update TREE.md [skip ci]" || echo "No changes to commit"
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SSH_AUTH_SOCK: "/github/workflow/ssh-agent.sock"
+      # - name: Commit Tree Changes
+      #   run: |
+      #     git config --local user.name "github-actions[bot]"
+      #     git config --local user.email "github-actions[bot]@users.noreply.github.com"
+      #     git remote set-url origin git@github.com:${GITHUB_REPOSITORY}.git
+      #     # Add TREE.md from the root directory
+      #     git add TREE.md
+      #     git commit -m "Update TREE.md [skip ci]" || echo "No changes to commit"
+      #     git push
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     SSH_AUTH_SOCK: "/github/workflow/ssh-agent.sock"
 
       - name: Install AWS CLI
         id: install-aws-cli
@@ -370,6 +370,27 @@ jobs:
               git commit -m "Update Terragrunt dependency graph [skip ci]" || echo "No changes to commit"
               git push
             )
+
+          INPUT_POST_EXEC_3: |
+            # Generate Directory Structure and save to TREE.md
+            tree -L 5 ${GITHUB_WORKSPACE} > ${GITHUB_WORKSPACE}/TREE.md
+            echo "Generated directory structure in TREE.md."
+      
+            # Git configuration for pushing changes
+            git config --local user.name "github-actions[bot]"
+            git config --local user.email "github-actions[bot]@users.noreply.github.com"
+            git remote set-url origin git@github.com:${GITHUB_REPOSITORY}.git
+            
+            # Check if TREE.md exists and add it to git
+            if [ -f ${GITHUB_WORKSPACE}/TREE.md ]; then
+              git add ${GITHUB_WORKSPACE}/TREE.md
+            else
+              echo "File 'TREE.md' does not exist."
+            fi
+            
+            git commit -m "Update TREE.md [skip ci]" || echo "No changes to commit"
+            git push
+
           SSH_AUTH_SOCK: "/github/workflow/ssh-agent.sock"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
