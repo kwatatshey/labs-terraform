@@ -195,7 +195,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-
       - name: Find Cluster Name
         id: find_cluster
         run: |
