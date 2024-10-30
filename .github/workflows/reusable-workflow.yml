@@ -344,7 +344,9 @@ jobs:
             sudo apt-get install -y tree
 
             # Generate Directory Structure excluding .git and save to TREE.md
-            tree -L 5 -I '.git' ${GITHUB_WORKSPACE} > ${GITHUB_WORKSPACE}/TREE.md
+            echo '```' > ${GITHUB_WORKSPACE}/TREE.md  # Start Markdown code block
+            tree -L 5 -I '.git' ${GITHUB_WORKSPACE} >> ${GITHUB_WORKSPACE}/TREE.md  # Append tree output
+            echo '```' >> ${GITHUB_WORKSPACE}/TREE.md  # End Markdown code block
             echo "Generated directory structure in TREE.md."
       
             # Git configuration for pushing changes
