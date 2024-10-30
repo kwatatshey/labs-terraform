@@ -383,6 +383,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
       - name: Terragrunt Plan
+        if: env.CLUSTER_EXISTS == 'true'
         id: terragrunt-plan
         uses: gruntwork-io/terragrunt-action@v2
         with:
@@ -391,6 +392,21 @@ jobs:
           tg_version: ${{ env.TG_ENV_VERSION }}
           tg_dir: ${{ env.AWS_ROOT_PATH }}
           tg_command: 'run-all plan'  
+        env:
+          TF_VAR_github_username: ${{ secrets.GIT_USERNAME }}
+          TF_VAR_github_token: ${{ secrets.GIT_TOKEN }}
+          SSH_AUTH_SOCK: "/github/workflow/ssh-agent.sock"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Terragrunt Apply
+        id: terragrunt-apply
+        uses: gruntwork-io/terragrunt-action@v2
+        with:
+          # tofu_version: ${{ env.TF_OFU_ENV_VERSION }}
+          tf_version: ${{ env.TF_ENV_VERSION }}
+          tg_version: ${{ env.TG_ENV_VERSION }}
+          tg_dir: ${{ env.AWS_ROOT_PATH }}
+          tg_command: 'run-all apply'  
         env:
           TF_VAR_github_username: ${{ secrets.GIT_USERNAME }}
           TF_VAR_github_token: ${{ secrets.GIT_TOKEN }}
