@@ -58,7 +58,6 @@ env:
   ACTIONS_STEP_DEBUG: true
   TF_IN_AUTOMATION: true
   ENVIRONMENT_NAME: ${{ github.event.inputs.environment_name }}
-  # TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform.d/plugin-cache
 
 jobs:
   reusable-job:
@@ -90,37 +89,6 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           ssh-auth-sock: "/home/runner/work/_temp/_github_workflow/ssh-agent.sock"
-
-      # - name: Generate Directory Structure(Tree)
-      #   uses: jaywcjlove/github-action-folder-tree@main
-      #   id: tree
-      #   with:
-      #     # exclude: "node_modules|dist|.git|.husky"
-      #     exclude: ".git"
-      #     path: .
-      #     depth: 5
-  
-      # - name: Modify TREE.md
-      #   id: modify-content-tree-md
-      #   uses: jaywcjlove/github-action-modify-file-content@main
-      #   with:
-      #     path: TREE.md
-      #     body: ${{ steps.tree.outputs.content }}
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
-          
-      # - name: Commit Tree Changes
-      #   run: |
-      #     git config --local user.name "github-actions[bot]"
-      #     git config --local user.email "github-actions[bot]@users.noreply.github.com"
-      #     git remote set-url origin git@github.com:${GITHUB_REPOSITORY}.git
-      #     # Add TREE.md from the root directory
-      #     git add TREE.md
-      #     git commit -m "Update TREE.md [skip ci]" || echo "No changes to commit"
-      #     git push
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     SSH_AUTH_SOCK: "/github/workflow/ssh-agent.sock"
 
       - name: Install AWS CLI
         id: install-aws-cli
@@ -261,17 +229,6 @@ jobs:
             echo "Skipping print current user as the cluster does not exist."
           fi || true
 
-      # - name: Create Terraform Plugin Cache Dir
-      #   id: create-terraform-plugin-cache-dir
-      #   run: mkdir -p $TF_PLUGIN_CACHE_DIR
-
-      # - name: Terraform Plugin Cache
-      #   id: terraform-plugin-cache
-      #   uses: actions/cache@v4.0.1
-      #   with:
-      #     path: ${{ env.TF_PLUGIN_CACHE_DIR }}
-      #     key: ${{ runner.os }}-terraform-plugin-cache-${{ hashFiles('**/.terraform.lock.hcl') }}
-          
       - name: Remove Terraform lock file and Terragrunt cache recursively with condition
         id: remove-terraform-lock-file-and-terragrunt-cache
         continue-on-error: true
@@ -309,7 +266,7 @@ jobs:
         env:
           TF_VAR_github_username: ${{ secrets.GIT_USERNAME }}
           TF_VAR_github_token: ${{ secrets.GIT_TOKEN }} 
-          # TF_PLUGIN_CACHE_DIR: /github/workspace/.terraform.d/plugin-cache
+
           INPUT_POST_EXEC_1: |
             # Install Graphviz
             sudo apt-get update
@@ -372,8 +329,8 @@ jobs:
             )
 
           INPUT_POST_EXEC_3: |
-            # Generate Directory Structure and save to TREE.md
-            tree -L 5 ${GITHUB_WORKSPACE} > ${GITHUB_WORKSPACE}/TREE.md
+            # Generate Directory Structure excluding .git and save to TREE.md
+            tree -L 5 --exclude .git ${GITHUB_WORKSPACE} > ${GITHUB_WORKSPACE}/TREE.md
             echo "Generated directory structure in TREE.md."
       
             # Git configuration for pushing changes
@@ -421,6 +378,5 @@ jobs:
         env:
           TF_VAR_github_username: ${{ secrets.GIT_USERNAME }}
           TF_VAR_github_token: ${{ secrets.GIT_TOKEN }}
-          # TF_PLUGIN_CACHE_DIR: /github/workspace/.terraform.d/plugin-cache
           SSH_AUTH_SOCK: "/github/workflow/ssh-agent.sock"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
