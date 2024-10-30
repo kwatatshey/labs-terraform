@@ -80,14 +80,19 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-  
+
+      - name: Install Graphviz
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y graphviz
+
       - name: Print Directory Structure(Tree)
         uses: jaywcjlove/github-action-folder-tree@main
         id: tree
         with:
           # exclude: "node_modules|dist|.git|.husky"
           path: ${{ env.GITHUB_WORKSPACE }}
-          depth: 8
+          depth: 5
     
       - name: Modify TREE.md
         id: modify-content-tree-md
