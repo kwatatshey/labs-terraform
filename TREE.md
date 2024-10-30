@@ -1,3 +1,4 @@
+```
 /github/workspace
 |-- Makefile
 |-- README.md
@@ -184,3 +185,4 @@
 `-- terragrunt.hcl
 
 98 directories, 85 files
+```
