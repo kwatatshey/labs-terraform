@@ -63,9 +63,9 @@ jobs:
   reusable-job:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment_name }}
-    defaults:
-      run:
-        working-directory: ${{ github.workspace }}
+    # defaults:
+    #   run:
+    #     working-directory: ${{ github.workspace }}
 
     steps:
 
@@ -187,6 +187,7 @@ jobs:
             tg_command: 'hclfmt --terragrunt-check --terragrunt-diff'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
       - name: Find Cluster Name
         id: find_cluster
