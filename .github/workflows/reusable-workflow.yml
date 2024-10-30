@@ -183,8 +183,10 @@ jobs:
             # tofu_version: ${{ env.TF_OFU_ENV_VERSION }}
             tf_version: ${{ env.TF_ENV_VERSION }}
             tg_version: ${{ env.TG_ENV_VERSION }}
-            tg_dir: ${{ env.GITHUB_WORKSPACE }}/
+            tg_dir: ${{ env.GITHUB_WORKSPACE }}/${{ env.AWS_ROOT_PATH }}
             tg_command: 'hclfmt --terragrunt-check --terragrunt-diff'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Find Cluster Name
         id: find_cluster
