@@ -240,10 +240,25 @@ jobs:
           path: ${{ env.TF_PLUGIN_CACHE_DIR }}
           key: ${{ runner.os }}-terraform-plugin-cache-${{ hashFiles('**/.terraform.lock.hcl') }}
           
-      - name: Remove Terraform lock file and Terragrunt cache
+      - name: Remove Terraform lock file and Terragrunt cache recursively with condition
+        id: remove-terraform-lock-file-and-terragrunt-cache
+        continue-on-error: true
         run: |
-          rm $(find . -type f -name .terraform.lock.hcl) || true
-          rm -rf $(find . -type d -name .terragrunt-cache) || true
+          # Check if any .terraform.lock.hcl files exist and remove them
+          if find . -type f -name '.terraform.lock.hcl' | grep -q .; then
+            find . -type f -name '.terraform.lock.hcl' -exec rm {} +
+            echo "Removed .terraform.lock.hcl files."
+          else
+            echo ".terraform.lock.hcl files not found."
+          fi || true
+
+          # Check if any .terragrunt-cache directories exist and remove them
+          if find . -type d -name '.terragrunt-cache' | grep -q .; then
+            find . -type d -name '.terragrunt-cache' -exec rm -rf {} +
+            echo "Removed .terragrunt-cache directories."
+          else
+            echo ".terragrunt-cache directories not found."
+          fi || true
 
       - name: Terragrunt Init
         id: terragrunt-init
