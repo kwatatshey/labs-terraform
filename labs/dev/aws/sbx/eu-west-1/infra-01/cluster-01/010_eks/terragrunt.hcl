@@ -1,7 +1,3 @@
-# terraform {
-#   source = "${get_repo_root()}/templates/aws/eks"
-# }
-
 terraform {
   source = "git::git@github.com:kwatatshey/labs-terraform-modules.git//templates/aws/eks"
 }
@@ -47,24 +43,14 @@ inputs = {
   private_subnet_ids           = dependency.vpc.outputs.private_subnets
   cluster_name                 = local.cluster_name
   worker_nodes_kms_key_aliases = local.worker_nodes_kms_key_aliases
-  # spot_instance_types   = ["t3.medium"]
-  # spot_instance_types   = ["m7i.4xlarge", "t3.small", "t3.medium", "t3.large", "t3a.small", "t3a.medium", "t3a.large", "t3.xlarge"]
-  # kubernets_version     = "1.30"
-  kubernets_version          = local.kubernets_version
-  r53_hosted_zone_name       = local.r53_hosted_zone_name
-  tags                       = local.common_tags
-  create_managed_node_groups = true
-  # create_node_security_group = true
+  kubernets_version            = local.kubernets_version
+  r53_hosted_zone_name         = local.r53_hosted_zone_name
+  tags                         = local.common_tags
+  create_managed_node_groups   = true
 
   node_security_group_tags = {
     "kubernetes.io/cluster/${local.cluster_name}" = "owned"
   }
-  # additional_policies  = {
-  #   "AmazonEKSFargatePodExecutionRolePolicy" = "arn:aws:iam::aws:policy/AmazonEKSFargatePodExecutionRolePolicy"
-  # }
-  # fargate_profile_namespace = "demo" #deployed only when create_fargate_profile is true)
-  # fargate_profile_name      = "demo" #deployed only when create_fargate_profile is true)
-  # create_fargate_profile    = true
 
   # For Node Group
   nodegroup_subnet_ids    = dependency.vpc.outputs.public_subnets
@@ -164,4 +150,13 @@ inputs = {
     }
   }
 
+  # EKS Cluster Addons
+  enable_eks_addons = true
+  addons = [
+    {
+      addon_name = "amazon-cloudwatch-observability"
+      # addon_version            = ""
+      # service_account_role_arn = ""
+    }
+  ]
 }

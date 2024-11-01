@@ -1,7 +1,3 @@
-# terraform {
-#   source = "${get_repo_root()}/templates/aws/charts/engines"
-# }
-
 terraform {
   source = "git::git@github.com:kwatatshey/labs-terraform-modules.git//templates/aws/charts/engines"
 }
@@ -25,15 +21,15 @@ include "common_providers" {
 dependency "eks" {
   config_path = "../010_eks"
   mock_outputs = {
-    vpc_id                = "vpc-1234"
-    r53_zone_name         = "zone_name"
-    r53_zone_id           = "zone_id"
-    eks_endpoint          = "https://example.com/eks"
-    eks_certificate       = "aGVsbG93b3JsZAo="
-    eks_cluster_name      = "test_cluster"
-    acm_certificate_arn   = "aGVsbG93b3JsZAo="
-    eks_oidc_provider_arn = "arn::test"
-    eks_oidc_issuer_url   = "https://"
+    vpc_id                             = "vpc-1234"
+    r53_zone_name                      = "zone_name"
+    r53_zone_id                        = "zone_id"
+    cluster_endpoint                   = "https://example.com/eks"
+    cluster_certificate_authority_data = "aGVsbG93b3JsZAo="
+    cluster_name                       = "test_cluster"
+    acm_certificate_arn                = "aGVsbG93b3JsZAo="
+    cluster_oidc_provider_arn          = "arn::test"
+    cluster_oidc_issuer_url            = "https://"
   }
 }
 
@@ -53,13 +49,13 @@ locals {
 
 inputs = {
   region                        = local.my_region
-  cluster_name                  = dependency.eks.outputs.eks_cluster_name
+  cluster_name                  = dependency.eks.outputs.cluster_name
   vpc_id                        = dependency.eks.outputs.vpc_id
   domain_name                   = dependency.eks.outputs.r53_zone_name
   r53_zone_id                   = dependency.eks.outputs.r53_zone_id
   acm_certificate_arn           = dependency.eks.outputs.acm_certificate_arn
-  cluster_oidc_provider_arn     = dependency.eks.outputs.eks_oidc_provider_arn
-  eks_oidc_issuer_url           = dependency.eks.outputs.eks_oidc_issuer_url
+  cluster_oidc_provider_arn     = dependency.eks.outputs.cluster_oidc_provider_arn
+  cluster_oidc_issuer_url       = dependency.eks.outputs.cluster_oidc_issuer_url
   cluster_secret_store_ref_name = dependency.system_charts.outputs.cluster_secret_store_ref_name
 
   # jenkins         

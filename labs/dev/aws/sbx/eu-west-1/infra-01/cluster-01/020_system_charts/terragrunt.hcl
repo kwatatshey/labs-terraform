@@ -1,7 +1,3 @@
-# terraform {
-#   source = "${get_repo_root()}/templates/aws/charts/system_charts"
-# }
-
 terraform {
   source = "git::git@github.com:kwatatshey/labs-terraform-modules.git//templates/aws/charts/system_charts"
 }
@@ -25,28 +21,31 @@ include "common_providers" {
 dependency "eks" {
   config_path = "../010_eks"
   mock_outputs = {
-    vpc_id                = "vpc-1234"
-    r53_zone_name         = "zone_id"
-    eks_endpoint          = "https://example.com/eks"
-    eks_certificate       = "aGVsbG93b3JsZAo="
-    eks_cluster_name      = "test_cluster"
-    acm_certificate_arn   = "aGVsbG93b3JsZAo="
-    eks_oidc_provider_arn = "arn::test"
+    vpc_id                             = "vpc-1234"
+    r53_zone_name                      = "zone_id"
+    cluster_endpoint                   = "https://example.com/eks"
+    cluster_certificate_authority_data = "aGVsbG93b3JsZAo="
+    cluster_name                       = "test_cluster"
+    acm_certificate_arn                = "aGVsbG93b3JsZAo="
+    cluster_oidc_provider_arn          = "arn::test"
+    cluster_version                    = "1.30"
   }
 }
 
 locals {
-  my_region = include.root.locals.my_region_conf.locals.my_region
+  my_region   = include.root.locals.my_region_conf.locals.my_region
+  common_tags = include.root.locals.my_env_conf.inputs.common_tags
 }
 
 inputs = {
   region                    = local.my_region
-  cluster_name              = dependency.eks.outputs.eks_cluster_name
-  cluster_endpoint          = dependency.eks.outputs.eks_endpoint
+  cluster_name              = dependency.eks.outputs.cluster_name
+  cluster_version           = dependency.eks.outputs.cluster_version
+  cluster_endpoint          = dependency.eks.outputs.cluster_endpoint
   vpc_id                    = dependency.eks.outputs.vpc_id
   domain_name               = dependency.eks.outputs.r53_zone_name
   acm_certificate_arn       = dependency.eks.outputs.acm_certificate_arn
-  cluster_oidc_provider_arn = dependency.eks.outputs.eks_oidc_provider_arn
+  cluster_oidc_provider_arn = dependency.eks.outputs.cluster_oidc_provider_arn
 
   # Cluster Autoscaler           
   cluster_autoscaler_enabled   = false
@@ -93,4 +92,8 @@ inputs = {
   keda_enabled     = false
   keda_poc_enabled = false
   keda_namespace   = "keda"
+
+  # Cluster Custom Helm Addons(operator)
+  enabled_custom_helm = true
+  tags                = local.common_tags
 }

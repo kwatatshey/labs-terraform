@@ -1,7 +1,3 @@
-# terraform {
-#   source = "${get_repo_root()}/templates/aws/charts/observability"
-# }
-
 terraform {
   source = "git::git@github.com:kwatatshey/labs-terraform-modules.git//templates/aws/charts/observability"
 }
@@ -25,14 +21,14 @@ include "common_providers" {
 dependency "eks" {
   config_path = "../010_eks"
   mock_outputs = {
-    vpc_id                = "vpc-1234"
-    r53_zone_name         = "zone_id"
-    eks_endpoint          = "https://example.com/eks"
-    eks_certificate       = "aGVsbG93b3JsZAo="
-    eks_cluster_name      = "test_cluster"
-    eks_region            = "eu-west-1"
-    acm_certificate_arn   = "aGVsbG93b3JsZAo="
-    eks_oidc_provider_arn = "arn::test"
+    vpc_id                             = "vpc-1234"
+    r53_zone_name                      = "zone_id"
+    cluster_endpoint                   = "https://example.com/eks"
+    cluster_certificate_authority_data = "aGVsbG93b3JsZAo="
+    cluster_name                       = "test_cluster"
+    cluster_region                     = "eu-west-1"
+    acm_certificate_arn                = "aGVsbG93b3JsZAo="
+    cluster_oidc_provider_arn          = "arn::test"
     cluster_autoscaler = {
       enabled        = true
       namespace      = "dummy"
@@ -102,12 +98,12 @@ dependency "system_charts" {
 }
 
 inputs = {
-  cluster_region            = dependency.eks.outputs.eks_region
-  cluster_name              = dependency.eks.outputs.eks_cluster_name
+  cluster_region            = dependency.eks.outputs.cluster_region
+  cluster_name              = dependency.eks.outputs.cluster_name
   vpc_id                    = dependency.eks.outputs.vpc_id
   domain_name               = dependency.eks.outputs.r53_zone_name
   acm_certificate_arn       = dependency.eks.outputs.acm_certificate_arn
-  cluster_oidc_provider_arn = dependency.eks.outputs.eks_oidc_provider_arn
+  cluster_oidc_provider_arn = dependency.eks.outputs.cluster_oidc_provider_arn
 
   # Kubeshark
   kubeshark_enabled   = true
